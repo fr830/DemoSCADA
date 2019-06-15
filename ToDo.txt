@@ -1,0 +1,29 @@
+#define DID_TAData             0x01 
+#define DID_TaskBinding        0X02
+#define DID_NavSysStatus       0X03
+#define DID_SRNavData		   0X04
+#define DID_FCCData		       0X05
+#define DID_FCCToLaser		   0X06
+#define DID_LaserToFCC		   0X07
+#define DID_FCCToFuse		   0X08
+#define DID_FuseToFCC		   0X09
+
+#define TAData_DAT_LEN          39
+#define TaskBinding_DAT_LEN     21
+#define NavSysStatus_DAT_LEN    76
+#define SRNavData_DAT_LEN       57
+#define FCCData_DAT_LEN         41
+#define FCCToLaser_DAT_LEN      8
+#define LaserToFCC_DAT_LEN      18
+#define FCCToFuse_DAT_LEN		8
+#define FuseToFCC_DAT_LEN		8
+
+11110000
+
+0110 0000
+
+
+
+存在的问题（若要做遥测）：验证字节拷贝
+
+开源并录制视频，同时把 Qt中其他知识模块补全；wpf的整个过程
