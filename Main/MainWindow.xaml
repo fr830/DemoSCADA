@@ -352,7 +352,17 @@
                 <TabItem Header="记录查询" />
                 <TabItem Header="报表系统" />
                 <TabItem Header="系统拓扑图" />
-
+                <TabItem Header="备用0" />
+                <TabItem Header="备用1" />
+                <TabItem Header="备用2" />
+                <TabItem Header="备用3" />
+                <TabItem Header="备用4" />
+                <TabItem Header="备用5" />
+                <TabItem Header="备用6" />
+                <TabItem Header="备用7" />
+                <TabItem Header="备用8" />
+                <TabItem Header="备用9" />
+                <TabItem Header="备用10" />
             </TabControl>
         </Border>
         
