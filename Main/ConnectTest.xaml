@@ -15,7 +15,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
-        
+
         <Grid Grid.Column="0" Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
@@ -37,17 +37,40 @@
                     <TextBlock Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">(3)本地主机端口</TextBlock>
                     <TextBox x:Name="localHostPort" Height="30" Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
 
-                    <Button  HorizontalAlignment="Stretch" Content="打开" VerticalAlignment="Top" Height="30" IsDefault="True" Template="{StaticResource NormalButtonTemplate}"
+                    <Button  HorizontalAlignment="Stretch" Content="打   开" VerticalAlignment="Top" Height="30" IsDefault="True" Template="{StaticResource NormalButtonTemplate}"
                              Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">
-                       
+
                     </Button>
                 </StackPanel>
             </GroupBox>
             <GroupBox Grid.Row="1" Header="接收设置">
-
+                <StackPanel Margin="3">
+                    <WrapPanel   Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">
+                        <RadioButton GroupName="js" Content="ASCII" IsChecked="True" Margin="0,0,5,0"/>
+                        <RadioButton GroupName="js" Content="HEX" />
+                    </WrapPanel>
+                    <CheckBox IsChecked="True" Content="按日志模式显示"   Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
+                    <CheckBox IsChecked="True" Content="接收完自动换行"   Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
+                    <CheckBox  Content="接收转存至文件"   Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
+                    <CheckBox  Content="暂停接收区显示"   Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
+                </StackPanel>
             </GroupBox>
             <GroupBox Grid.Row="2" Header="发送设置">
-
+                <StackPanel Margin="3">
+                    <WrapPanel   Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">
+                        <RadioButton GroupName="js" Content="ASCII" IsChecked="True" Margin="0,0,5,0"/>
+                        <RadioButton GroupName="js" Content="HEX" />
+                    </WrapPanel>
+                    <CheckBox IsChecked="True" Content="自动解释转义字符"   Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
+                    <CheckBox IsChecked="True" Content="AT指令自动回车"   Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
+                    <CheckBox  Content="自动发送校验位"   Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
+                    <CheckBox  Content="打开文件数据源"   Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
+                    <WrapPanel Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">
+                        <CheckBox Content="循环周期"/>
+                        <TextBox Name="txtPeriod" Width="25"/>
+                        <TextBlock Text="ms"/>
+                    </WrapPanel>
+                </StackPanel>
             </GroupBox>
         </Grid>
 
@@ -55,15 +78,66 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="4*"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            
+
             <GroupBox Header="数据日志" Grid.Row="0">
-                
+                <TextBox Name="txtRcv" IsReadOnly="True"/>
             </GroupBox>
-
-            <GroupBox Header="数据发送" Grid.Row="1">
-
+            
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <Button Content="清除" Grid.Column="2">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <Image Source="Images/downArrow.png"  Width="30"/>
+                                                <TextBlock x:Name="Txt" Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Content="清除" Grid.Column="0">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <Image Source="Images/upArrow.png"  Width="30"/>
+                                                <TextBlock x:Name="Txt" Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+            <GroupBox Header="数据发送" Grid.Row="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="60"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Name="txtSend">https://www.sanygroup.com/</TextBox>
+                    <Button  Content="发送" Grid.Column="1"></Button>
+                </Grid>
             </GroupBox>
         </Grid>
 
