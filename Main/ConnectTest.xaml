@@ -46,13 +46,24 @@
                                 <Setter Property="Text" Value="(3)本地主机端口"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Path=SelectedItem,ElementName=cmbProtocolType,Converter={StaticResource cmbSelectionCvt}}" Value="Ping">
-                                        <Setter Property="Text" Value="Ping次数"/>
+                                        <Setter Property="Text" Value="(3)Ping次数"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <TextBox x:Name="localHostPort" Height="30" Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}" Text="8080"/>
+                    <TextBox x:Name="localHostPort" Height="30" Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}" >
+                        <TextBox.Style>
+                            <Style TargetType="{x:Type TextBox}">
+                                <Setter Property="Text" Value="8080"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=SelectedItem,ElementName=cmbProtocolType,Converter={StaticResource cmbSelectionCvt}}" Value="Ping">
+                                        <Setter Property="Text" Value="4"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
 
                     <Button  HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" IsDefault="True"
                              Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}" Click="Btn_openConnect">
