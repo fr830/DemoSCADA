@@ -9,6 +9,10 @@
     <UserControl.CommandBindings>
         <CommandBinding Command="{x:Static local:ConnectTest.SendCommand}" Executed="Send_Execute" CanExecute="Send_CanExecute"/>
     </UserControl.CommandBindings>
+    <UserControl.Resources>
+        <local:CmbSelectionConverter x:Key="cmbSelectionCvt"/>
+        
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -28,7 +32,7 @@
             <GroupBox Grid.Row="0" Header="网络设置">
                 <StackPanel Margin="3" Orientation="Vertical">
                     <TextBlock Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">(1)协议类型</TextBlock>
-                    <ComboBox x:Name="cmbProtocolType" Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}" >
+                    <ComboBox x:Name="cmbProtocolType"  Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}" >
                         <ComboBoxItem IsSelected="True">UDP</ComboBoxItem>
                         <ComboBoxItem>TCP Client</ComboBoxItem>
                         <ComboBoxItem>TCP Server</ComboBoxItem>
@@ -36,7 +40,18 @@
                     </ComboBox>
                     <TextBlock Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">(2)本地主机地址</TextBlock>
                     <ComboBox Name="cmbIpAddress" Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
-                    <TextBlock Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">(3)本地主机端口</TextBlock>
+                    <TextBlock Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Text" Value="(3)本地主机端口"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=SelectedItem,ElementName=cmbProtocolType,Converter={StaticResource cmbSelectionCvt}}" Value="Ping">
+                                        <Setter Property="Text" Value="Ping次数"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
                     <TextBox x:Name="localHostPort" Height="30" Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}" Text="8080"/>
 
                     <Button  HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" IsDefault="True"
