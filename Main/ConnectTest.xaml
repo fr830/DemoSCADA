@@ -6,9 +6,9 @@
              xmlns:local="clr-namespace:Main"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" FontSize="15" Background="AliceBlue" Margin="1" Name="connetTest">
-    <UserControl.Resources>
-        <BitmapImage x:Key="closeConnectImage" UriSource="/Images/CloseConnect.png"/>
-    </UserControl.Resources>
+    <UserControl.CommandBindings>
+        <CommandBinding Command="{x:Static local:ConnectTest.SendCommand}" Executed="Send_Execute" CanExecute="Send_CanExecute"/>
+    </UserControl.CommandBindings>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -35,11 +35,9 @@
                         <ComboBoxItem>Ping</ComboBoxItem>
                     </ComboBox>
                     <TextBlock Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">(2)本地主机地址</TextBlock>
-                    <ComboBox Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">
-                        <ComboBoxItem>127.0.0.1</ComboBoxItem>
-                    </ComboBox>
+                    <ComboBox Name="cmbIpAddress" Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
                     <TextBlock Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">(3)本地主机端口</TextBlock>
-                    <TextBox x:Name="localHostPort" Height="30" Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
+                    <TextBox x:Name="localHostPort" Height="30" Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}" Text="8080"/>
 
                     <Button  HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" IsDefault="True"
                              Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}" Click="Btn_openConnect">
@@ -182,8 +180,8 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="60"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Name="txtSend">https://www.sanygroup.com/</TextBox>
-                    <Button  Content="发送" Grid.Column="1"></Button>
+                    <TextBox Grid.Column="0" Name="txtSend">https://www.sanygroup.com</TextBox>
+                    <Button  Content="发送" Grid.Column="1" Command="{x:Static local:ConnectTest.SendCommand}" CommandTarget="{Binding ElementName=txtSend}"></Button>
                 </Grid>
             </GroupBox>
         </Grid>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,13 +24,17 @@ namespace Main
         public ConnectTest()
         {
             InitializeComponent();
+            GetIP();
         }
 
+        public static readonly RoutedCommand SendCommand;
         public static readonly DependencyProperty IsConnectedProperty;
+
 
         static ConnectTest()
         {
             IsConnectedProperty = DependencyProperty.Register("IsConnected", typeof(bool), typeof(ConnectTest), new PropertyMetadata((bool)false));
+            SendCommand = new RoutedCommand(); 
         }
 
         public  bool IsConnected
@@ -36,7 +42,6 @@ namespace Main
             get { return (bool)GetValue(IsConnectedProperty); }
             set { SetValue(IsConnectedProperty, value); }
         }
-
 
 
         private void Btn_clcTxtSend(object sender, RoutedEventArgs e)
@@ -60,5 +65,41 @@ namespace Main
                 IsConnected = true;
             }
         }
+
+        private void Send_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (txtSend.Text != "")
+            {
+                e.CanExecute = true;
+            }
+            else
+            {
+                e.CanExecute = false;
+            }
+            
+        }
+
+        private  void Send_Execute(object sender, ExecutedRoutedEventArgs e)
+        {
+            MessageBox.Show("Custom Command Executed");
+        }
+
+        private void GetIP()
+        {
+            List<string> ipList = new List<string>();
+            string hostName = Dns.GetHostName();
+            System.Net.IPAddress[] addressList = Dns.GetHostAddresses(hostName);
+            foreach (IPAddress ip in addressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                    ipList.Add(ip.ToString());
+            }
+
+            ipList.Add("127.0.0.1");
+
+            cmbIpAddress.ItemsSource = ipList;
+            cmbIpAddress.SelectedIndex = 0;
+        }
     }
+
 }
