@@ -5,7 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Main"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" FontSize="15" Background="AliceBlue" Margin="1">
+             d:DesignHeight="450" d:DesignWidth="800" FontSize="15" Background="AliceBlue" Margin="1" Name="connetTest">
+    <UserControl.Resources>
+        <BitmapImage x:Key="closeConnectImage" UriSource="/Images/CloseConnect.png"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -29,6 +32,7 @@
                         <ComboBoxItem IsSelected="True">UDP</ComboBoxItem>
                         <ComboBoxItem>TCP Client</ComboBoxItem>
                         <ComboBoxItem>TCP Server</ComboBoxItem>
+                        <ComboBoxItem>Ping</ComboBoxItem>
                     </ComboBox>
                     <TextBlock Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">(2)本地主机地址</TextBlock>
                     <ComboBox Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">
@@ -37,9 +41,50 @@
                     <TextBlock Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">(3)本地主机端口</TextBlock>
                     <TextBox x:Name="localHostPort" Height="30" Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
 
-                    <Button  HorizontalAlignment="Stretch" Content="打   开" VerticalAlignment="Top" Height="30" IsDefault="True" Template="{StaticResource NormalButtonTemplate}"
-                             Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">
-
+                    <Button  HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" IsDefault="True"
+                             Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}" Click="Btn_openConnect">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border>
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                    <Image Width="{TemplateBinding Height}" Margin="5" Name="imageConnect">
+                                                        <Image.Style>
+                                                            <Style TargetType="{x:Type Image}">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Path=IsConnected, RelativeSource={RelativeSource  Mode=FindAncestor,AncestorType=local:ConnectTest}}" Value="True">
+                                                                        <Setter Property="Source" Value="Images/CloseConnect.png"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Path=IsConnected, RelativeSource={RelativeSource  Mode=FindAncestor,AncestorType=local:ConnectTest}}" Value="False">
+                                                                        <Setter Property="Source" Value="Images/OpenConnect.png"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Image.Style>
+                                                    </Image>
+                                                    <TextBlock x:Name="txtConnect"  Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="{x:Type TextBlock}">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource  Mode=FindAncestor,AncestorType=local:ConnectTest}, Path=IsConnected}" Value="True">
+                                                                        <Setter Property="Text" Value="关    闭"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger  Binding="{Binding RelativeSource={RelativeSource  Mode=FindAncestor,AncestorType=local:ConnectTest}, Path=IsConnected}" Value="False">
+                                                                        <Setter Property="Text" Value="打    开"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
                     </Button>
                 </StackPanel>
             </GroupBox>
@@ -88,11 +133,13 @@
             
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Content="清除" Grid.Column="2">
+                <Button Content="清除" Grid.Column="3" Click="Btn_clcTxtSend">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}">
                             <Setter Property="Template">
@@ -110,7 +157,7 @@
                         </Style>
                     </Button.Style>
                 </Button>
-                <Button Content="清除" Grid.Column="0">
+                <Button Content="清除" Grid.Column="1" Click="Btn_clcTxtRcv">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}">
                             <Setter Property="Template">

@@ -23,5 +23,42 @@ namespace Main
         {
             InitializeComponent();
         }
+
+        public static readonly DependencyProperty IsConnectedProperty;
+
+        static ConnectTest()
+        {
+            IsConnectedProperty = DependencyProperty.Register("IsConnected", typeof(bool), typeof(ConnectTest), new PropertyMetadata((bool)false));
+        }
+
+        public  bool IsConnected
+        {
+            get { return (bool)GetValue(IsConnectedProperty); }
+            set { SetValue(IsConnectedProperty, value); }
+        }
+
+
+
+        private void Btn_clcTxtSend(object sender, RoutedEventArgs e)
+        {
+            this.txtSend.Text = "";
+        }
+
+        private void Btn_clcTxtRcv(object sender, RoutedEventArgs e)
+        {
+            this.txtRcv.Text = "";
+        }
+
+        private void Btn_openConnect(object sender, RoutedEventArgs e)
+        {
+            if (IsConnected)
+            {
+                IsConnected = false;
+            }
+            else
+            {
+                IsConnected = true;
+            }
+        }
     }
 }

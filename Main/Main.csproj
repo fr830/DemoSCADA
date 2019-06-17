@@ -57,8 +57,8 @@
     <Compile Include="ConnectTest.xaml.cs">
       <DependentUpon>ConnectTest.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RelayCommand.cs" />
-    <Compile Include="ScrollableTabPanel.cs" />
+    <Compile Include="UIClass\RelayCommand.cs" />
+    <Compile Include="UIClass\ScrollableTabPanel.cs" />
     <Page Include="ConnectTest.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -102,6 +102,13 @@
   <ItemGroup>
     <Resource Include="Images\downArrow.png" />
     <Resource Include="Images\upArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\CloseConnect.png" />
+    <Resource Include="Images\OpenConnect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
