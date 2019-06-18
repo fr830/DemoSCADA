@@ -15,14 +15,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Main
+namespace ControlLibrary
 {
     /// <summary>
-    /// ConnectTest.xaml 的交互逻辑
+    /// CLConnectTest.xaml 的交互逻辑
     /// </summary>
-    public partial class ConnectTest : UserControl
+    public partial class CLConnectTest : UserControl
     {
-        public ConnectTest()
+        public CLConnectTest()
         {
             InitializeComponent();
             GetIP();
@@ -38,13 +38,13 @@ namespace Main
             set { _localIPAddress = value; }
         }
 
-        static ConnectTest()
+        static CLConnectTest()
         {
-            IsConnectedProperty = DependencyProperty.Register("IsConnected", typeof(bool), typeof(ConnectTest), new PropertyMetadata((bool)false));
-            SendCommand = new RoutedCommand(); 
+            IsConnectedProperty = DependencyProperty.Register("IsConnected", typeof(bool), typeof(CLConnectTest), new PropertyMetadata((bool)false));
+            SendCommand = new RoutedCommand();
         }
 
-        public  bool IsConnected
+        public bool IsConnected
         {
             get { return (bool)GetValue(IsConnectedProperty); }
             set { SetValue(IsConnectedProperty, value); }
@@ -88,10 +88,10 @@ namespace Main
             {
                 e.CanExecute = false;
             }
-            
+
         }
 
-        private  void Send_Execute(object sender, ExecutedRoutedEventArgs e)
+        private void Send_Execute(object sender, ExecutedRoutedEventArgs e)
         {
             MessageBox.Show("Custom Command Executed");
         }
@@ -110,7 +110,7 @@ namespace Main
                     _localIPAddress = ip.ToString();
                     remoteIPList.Add(ip.ToString() + " :8080");
                 }
-                   
+
             }
 
             ipList.Add("127.0.0.1");

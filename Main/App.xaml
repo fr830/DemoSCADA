@@ -37,7 +37,5 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
-
-        <sys:Int16 x:Key="controlMargin">3</sys:Int16>
     </Application.Resources>
 </Application>
