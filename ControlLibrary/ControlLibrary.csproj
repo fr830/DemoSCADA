@@ -50,6 +50,7 @@
     <Compile Include="CLConnectTest.xaml.cs">
       <DependentUpon>CLConnectTest.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Connect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
