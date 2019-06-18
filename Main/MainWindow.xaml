@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Main"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:usrcontrol="clr-namespace:ControlLibrary"
+        xmlns:cl="http://talonzeng.com/ControlLibrary"
         xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" WindowStyle="None" WindowState="Maximized">
@@ -335,11 +335,11 @@
             <TabControl Style="{DynamicResource AssetpdTabControlStyle}">
                 
                 <TabItem Header="通讯测试">
-                    <usrcontrol:CLConnectTest x:Name="conTest"/>
+                    <cl:CLConnectTest/>
                 </TabItem>
-                
-                <TabItem Header="二层台机械手">
 
+                <TabItem Header="二层台机械手">
+                   
                 </TabItem>
                 <TabItem Header="钻台机械手" >
 

@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:ControlLibrary.Resources">
-
+                    xmlns:local="clr-namespace:Main.Resources">
     <ControlTemplate TargetType="Button" x:Key="NormalButtonTemplate">
         <Border BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="0" CornerRadius="8,8,8,8" Name="PART_Background">
             <Border.Background>
@@ -34,8 +33,4 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    <BitmapImage x:Key="closeConnect" UriSource="../Images/CloseConnect.png"/>
-    <BitmapImage x:Key="openConnect" UriSource="../Images/OpenConnect.png"/>
-    <BitmapImage x:Key="downArrow" UriSource="../Images/downArrow.png"/>
-    <BitmapImage x:Key="upArrow" UriSource="../Images/upArrow.png"/>
 </ResourceDictionary>

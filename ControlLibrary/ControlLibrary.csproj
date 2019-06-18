@@ -82,8 +82,12 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Images\" />
+    <Resource Include="Images\CloseConnect.png" />
+    <Resource Include="Images\downArrow.png" />
+    <Resource Include="Images\OpenConnect.png" />
+    <Resource Include="Images\upArrow.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
