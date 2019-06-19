@@ -25,12 +25,14 @@ namespace ControlLibrary
         public CLConnectTest()
         {
             InitializeComponent();
+            Init();
             GetIP();
         }
 
         public static readonly RoutedCommand SendCommand;
         public static readonly DependencyProperty IsConnectedProperty;
-
+        IConnect iConnectType;
+        private List<DataForm> txtData = new List<DataForm>();
         private string _localIPAddress;
         public string LocalIPAddress
         {
@@ -50,6 +52,10 @@ namespace ControlLibrary
             set { SetValue(IsConnectedProperty, value); }
         }
 
+        private void Init()
+        {
+            
+        }
 
         private void Btn_clcTxtSend(object sender, RoutedEventArgs e)
         {
@@ -63,19 +69,48 @@ namespace ControlLibrary
 
         private void Btn_openConnect(object sender, RoutedEventArgs e)
         {
-            string strSelected = cmbProtocolType.SelectedItem.ToString();
-
             if (IsConnected)
             {
-
-
-
+                if (iConnectType != null)
+                    iConnectType.CloseConnect();
                 IsConnected = false;
+                return;
             }
-            else
+
+            string strProtocol = cmbProtocolType.Text;
+            string strIPAddress = cmbIpAddress.SelectedItem.ToString();
+
+            int iPort;
+            int.TryParse(hostPort.Text, out iPort);
+
+            switch (strProtocol)
+            {
+                case "UDP":
+                    iConnectType = new UDPConnect(strIPAddress, iPort);
+                    break;
+                default:
+                    iConnectType = new UDPConnect(strIPAddress, iPort);
+                    break;
+            }
+
+            iConnectType.GetRcvBufferEvent += DisPlayData;
+
+            if (iConnectType.OpenConnect())
             {
                 IsConnected = true;
             }
+        }
+
+        private void DisPlayData(DataForm dt)
+        {
+            txtData.Add(dt);
+        }
+
+        private void PartStringToIPPort(string s,out string ip, out int port)
+        {
+            string[] sArray = s.Split(new char[2] { ':','：' });
+            ip = sArray[0];
+            int.TryParse(sArray[1],out port);
         }
 
         private void Send_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -93,7 +128,21 @@ namespace ControlLibrary
 
         private void Send_Execute(object sender, ExecutedRoutedEventArgs e)
         {
-            MessageBox.Show("Custom Command Executed");
+            if (IsConnected)
+            {
+                if (cmbProtocolType.Text == "UDP")
+                {
+                    string strTemp = cmbRemoteHost.Text;
+                    string strRemoteIP;
+                    int iRemotePort;
+                    PartStringToIPPort(strTemp, out strRemoteIP, out iRemotePort);
+
+                    iConnectType.RemoteIPAddress = strRemoteIP;
+                    iConnectType.RemotePort = iRemotePort;
+                }
+
+                iConnectType.SendData(Encoding.UTF8.GetBytes(txtSend.Text));
+            }
         }
 
         private void GetIP()
@@ -108,13 +157,13 @@ namespace ControlLibrary
                 {
                     ipList.Add(ip.ToString());
                     _localIPAddress = ip.ToString();
-                    remoteIPList.Add(ip.ToString() + " :8080");
+                    remoteIPList.Add(ip.ToString() + " :8081");
                 }
 
             }
 
             ipList.Add("127.0.0.1");
-            remoteIPList.Add("127.0.0.1 :8080");
+            remoteIPList.Add("127.0.0.1 :8081");
             cmbIpAddress.ItemsSource = ipList;
             cmbIpAddress.SelectedIndex = 0;
             cmbRemoteHost.ItemsSource = remoteIPList;

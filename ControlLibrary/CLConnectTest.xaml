@@ -92,7 +92,7 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <TextBox x:Name="localHostPort" Height="30" Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}" >
+                    <TextBox x:Name="hostPort" Height="30" Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}" >
                         <TextBox.Style>
                             <Style TargetType="{x:Type TextBox}">
                                 <Setter Property="Text" Value="8080"/>
@@ -199,7 +199,7 @@
             </Grid.RowDefinitions>
 
             <GroupBox Header="数据日志" Grid.Row="0">
-                <TextBox Name="txtRcv" IsReadOnly="True"/>
+                <TextBox Name="txtRcv" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"/>
             </GroupBox>
 
             <Grid Grid.Row="1">
