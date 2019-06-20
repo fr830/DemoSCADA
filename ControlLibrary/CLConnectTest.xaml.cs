@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -32,7 +33,8 @@ namespace ControlLibrary
         public static readonly RoutedCommand SendCommand;
         public static readonly DependencyProperty IsConnectedProperty;
         IConnect iConnectType;
-        private List<DataForm> txtData = new List<DataForm>();
+        private ObservableCollection<DataForm> rcvSendData = new ObservableCollection<DataForm>();
+
         private string _localIPAddress;
         public string LocalIPAddress
         {
@@ -48,13 +50,13 @@ namespace ControlLibrary
 
         public bool IsConnected
         {
-            get { return (bool)GetValue(IsConnectedProperty); }
+            get { return (bool)GetValue(IsConnectedProperty); } 
             set { SetValue(IsConnectedProperty, value); }
         }
 
         private void Init()
         {
-            
+            listDisplayData.ItemsSource = rcvSendData;
         }
 
         private void Btn_clcTxtSend(object sender, RoutedEventArgs e)
@@ -64,7 +66,7 @@ namespace ControlLibrary
 
         private void Btn_clcTxtRcv(object sender, RoutedEventArgs e)
         {
-            this.txtRcv.Text = "";
+            rcvSendData.Clear();
         }
 
         private void Btn_openConnect(object sender, RoutedEventArgs e)
@@ -93,17 +95,22 @@ namespace ControlLibrary
                     break;
             }
 
-            iConnectType.GetRcvBufferEvent += DisPlayData;
-
             if (iConnectType.OpenConnect())
             {
                 IsConnected = true;
             }
+            else
+            {
+                IsConnected = false;
+                return;
+            }
+
+            iConnectType.GetRcvBufferEvent += DisPlayDataAsync;
         }
 
-        private void DisPlayData(DataForm dt)
+        private void DisPlayDataAsync(DataForm dt)
         {
-            txtData.Add(dt);
+            this.Dispatcher.BeginInvoke(new Action(() => rcvSendData.Add(new DataForm { Buffer = dt.Buffer, Length = dt.Length, IPPort ="["+dt.DTime+"]# RECV FROM " + dt.IPPort, DTime = dt.DTime, IsRS = dt.IsRS })));
         }
 
         private void PartStringToIPPort(string s,out string ip, out int port)
@@ -142,6 +149,7 @@ namespace ControlLibrary
                 }
 
                 iConnectType.SendData(Encoding.UTF8.GetBytes(txtSend.Text));
+                rcvSendData.Add(new DataForm { Buffer =txtSend.Text, Length = txtSend.Text.Length, IPPort = "[" + DateTime.Now + "]# SEND TO " + cmbRemoteHost.Text, DTime =DateTime.Now, IsRS = true });
             }
         }
 
@@ -182,6 +190,74 @@ namespace ControlLibrary
             ComboBoxItem cbi = (ComboBoxItem)value;
 
             return cbi.Content.ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ListBoxWidthConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null)
+            {
+                return string.Empty;
+            }
+
+           return double.Parse(string.Format("{0}", value)) -10;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class IsRcvSendToAlignmentConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null)
+            {
+                return string.Empty;
+            }
+
+            bool bIsRcvSend = (bool)value;
+
+            if (bIsRcvSend)
+            {
+                return "Left";
+            }
+
+            return "Right";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class IsRcvSendToColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null)
+            {
+                return string.Empty;
+            }
+
+            bool bIsRcvSend = (bool)value;
+
+            if (bIsRcvSend)
+            {
+                return "#0000FF";
+            }
+
+            return "#008000";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

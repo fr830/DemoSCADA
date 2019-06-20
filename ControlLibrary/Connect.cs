@@ -6,11 +6,12 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace ControlLibrary
 {
-    public delegate void GetRcvBuffer(DataForm dt);
+    public delegate void  GetRcvBuffer(DataForm dt);
 
    interface IConnect
     {
@@ -36,6 +37,7 @@ namespace ControlLibrary
         Thread tRcv;
         public event GetRcvBuffer GetRcvBufferEvent;
         private string _localIPAddress = "127.0.0.1";
+        DataForm dt = new DataForm();
         public string LocalIPAddress
         {
             get { return _localIPAddress; }
@@ -165,7 +167,6 @@ namespace ControlLibrary
 
                 if((GetRcvBufferEvent != null) && (length > 0))
                 {
-                    DataForm dt = new DataForm();
                     dt.SetValue(false, Encoding.UTF8.GetString(rcvBuffer, 0, length), fromPoint.ToString(), length);
                     GetRcvBufferEvent(dt);
                 }

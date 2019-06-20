@@ -15,6 +15,9 @@
                 <ResourceDictionary Source="Resources/DictionaryConnectTest.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <local:CmbSelectionConverter x:Key="cmbSelectionCvt"/>
+            <local:ListBoxWidthConverter x:Key="listBoxWidthCvt"/>
+            <local:IsRcvSendToAlignmentConverter x:Key="rcvSendToAlignCvt"/>
+            <local:IsRcvSendToColorConverter x:Key="rcvSendToColorCvt"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -191,17 +194,27 @@
         </Grid>
 
         <Grid Grid.Column="1" Grid.Row="0">
-
             <Grid.RowDefinitions>
                 <RowDefinition Height="4*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-
             <GroupBox Header="数据日志" Grid.Row="0">
-                <TextBox Name="txtRcv" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"/>
+                <ListBox Name="listDisplayData" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Text="{Binding IPPort}"  Foreground="#6D6D6D" HorizontalAlignment="{Binding IsRS,Converter={StaticResource rcvSendToAlignCvt}}" />
+                                <TextBox Grid.Row="1" Text="{Binding Buffer}" Foreground="{Binding IsRS,Converter={StaticResource rcvSendToColorCvt}}" TextWrapping="Wrap"  IsReadOnly="True" HorizontalContentAlignment="{Binding IsRS,Converter={StaticResource rcvSendToAlignCvt}}" Width="{Binding Path=ViewportWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ScrollViewer},Converter={StaticResource listBoxWidthCvt}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </GroupBox>
-
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
