@@ -122,7 +122,7 @@ namespace ControlLibrary
 
         private void Send_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (txtSend.Text != "")
+            if (txtSend.Text != "" && IsConnected)
             {
                 e.CanExecute = true;
             }
@@ -135,22 +135,20 @@ namespace ControlLibrary
 
         private void Send_Execute(object sender, ExecutedRoutedEventArgs e)
         {
-            if (IsConnected)
+
+            if (cmbProtocolType.Text == "UDP")
             {
-                if (cmbProtocolType.Text == "UDP")
-                {
-                    string strTemp = cmbRemoteHost.Text;
-                    string strRemoteIP;
-                    int iRemotePort;
-                    PartStringToIPPort(strTemp, out strRemoteIP, out iRemotePort);
+                string strTemp = cmbRemoteHost.Text;
+                string strRemoteIP;
+                int iRemotePort;
+                PartStringToIPPort(strTemp, out strRemoteIP, out iRemotePort);
 
-                    iConnectType.RemoteIPAddress = strRemoteIP;
-                    iConnectType.RemotePort = iRemotePort;
-                }
-
-                iConnectType.SendData(Encoding.UTF8.GetBytes(txtSend.Text));
-                rcvSendData.Add(new DataForm { Buffer =txtSend.Text, Length = txtSend.Text.Length, IPPort = "[" + DateTime.Now + "]# SEND TO " + cmbRemoteHost.Text, DTime =DateTime.Now, IsRS = true });
+                iConnectType.RemoteIPAddress = strRemoteIP;
+                iConnectType.RemotePort = iRemotePort;
             }
+
+            iConnectType.SendData(Encoding.UTF8.GetBytes(txtSend.Text));
+            rcvSendData.Add(new DataForm { Buffer =txtSend.Text, Length = txtSend.Text.Length, IPPort = "[" + DateTime.Now + "]# SEND TO " + cmbRemoteHost.Text, DTime =DateTime.Now, IsRS = true });
         }
 
         private void GetIP()
@@ -176,6 +174,7 @@ namespace ControlLibrary
             cmbIpAddress.SelectedIndex = 0;
             cmbRemoteHost.ItemsSource = remoteIPList;
         }
+
     }
 
     public class CmbSelectionConverter : IValueConverter

@@ -200,7 +200,7 @@
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <GroupBox Header="数据日志" Grid.Row="0">
-                <ListBox Name="listDisplayData" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox Name="listDisplayData" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="UpdateScrollBar">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid >
@@ -208,7 +208,7 @@
                                     <RowDefinition />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Text="{Binding IPPort}"  Foreground="#6D6D6D" HorizontalAlignment="{Binding IsRS,Converter={StaticResource rcvSendToAlignCvt}}" />
+                                <TextBlock Grid.Row="0" Text="{Binding IPPort}" FontSize="12" Foreground="#6D6D6D" HorizontalAlignment="{Binding IsRS,Converter={StaticResource rcvSendToAlignCvt}}" />
                                 <TextBox Grid.Row="1" Text="{Binding Buffer}" Foreground="{Binding IsRS,Converter={StaticResource rcvSendToColorCvt}}" TextWrapping="Wrap"  IsReadOnly="True" HorizontalContentAlignment="{Binding IsRS,Converter={StaticResource rcvSendToAlignCvt}}" Width="{Binding Path=ViewportWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ScrollViewer},Converter={StaticResource listBoxWidthCvt}}" />
                             </Grid>
                         </DataTemplate>
@@ -285,7 +285,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="60"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Name="txtSend">https://www.sanygroup.com</TextBox>
+                    <TextBox Grid.Column="0" Name="txtSend"  TextWrapping="Wrap">https://www.sanygroup.com</TextBox>
                     <Button  Content="发送" Grid.Column="1" Command="{x:Static local:CLConnectTest.SendCommand}" CommandTarget="{Binding ElementName=txtSend}"></Button>
                 </Grid>
             </GroupBox>
