@@ -177,7 +177,15 @@ namespace ControlLibrary
         {
             if (toPoint == null)
             {
-                toPoint = new IPEndPoint(IPAddress.Parse(RemoteIPAddress), RemotePort);
+                try
+                {
+                    toPoint = new IPEndPoint(IPAddress.Parse(RemoteIPAddress), RemotePort);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+              
             }
 
             try

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -34,7 +36,8 @@ namespace ControlLibrary
         public static readonly DependencyProperty IsConnectedProperty;
         IConnect iConnectType;
         private ObservableCollection<DataForm> rcvSendData = new ObservableCollection<DataForm>();
-
+        List<RadioButton> rcvRadioGroup;
+        List<RadioButton> sendRadioGroup;
         private string _localIPAddress;
         public string LocalIPAddress
         {
@@ -57,6 +60,19 @@ namespace ControlLibrary
         private void Init()
         {
             listDisplayData.ItemsSource = rcvSendData;
+            ((INotifyCollectionChanged)listDisplayData.Items).CollectionChanged += ListView_CollectionChanged;
+
+            rcvRadioGroup = new List<RadioButton>() { rcvRadioASCII , rcvRadioHEX };
+            sendRadioGroup = new List<RadioButton>() { sendRadioASCII , sendRadioHEX };
+        }
+
+        private void ListView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                // scroll the new item into view   
+                listDisplayData.ScrollIntoView(e.NewItems[0]);
+            }
         }
 
         private void Btn_clcTxtSend(object sender, RoutedEventArgs e)
@@ -109,8 +125,9 @@ namespace ControlLibrary
         }
 
         private void DisPlayDataAsync(DataForm dt)
-        {
-            this.Dispatcher.BeginInvoke(new Action(() => rcvSendData.Add(new DataForm { Buffer = dt.Buffer, Length = dt.Length, IPPort ="["+dt.DTime+"]# RECV FROM " + dt.IPPort, DTime = dt.DTime, IsRS = dt.IsRS })));
+        {            
+            var cb = rcvRadioGroup.First(x => x.IsChecked == true);
+            this.Dispatcher.BeginInvoke(new Action(() => rcvSendData.Add(new DataForm { Buffer = dt.Buffer, Length = dt.Length, IPPort ="["+dt.DTime+"]# RECV " + cb.Content +  " FROM " + dt.IPPort, DTime = dt.DTime, IsRS = dt.IsRS })));
         }
 
         private void PartStringToIPPort(string s,out string ip, out int port)
@@ -147,8 +164,11 @@ namespace ControlLibrary
                 iConnectType.RemotePort = iRemotePort;
             }
 
+            var cb = sendRadioGroup.Where(x => x.IsChecked == true).First();
+
             iConnectType.SendData(Encoding.UTF8.GetBytes(txtSend.Text));
-            rcvSendData.Add(new DataForm { Buffer =txtSend.Text, Length = txtSend.Text.Length, IPPort = "[" + DateTime.Now + "]# SEND TO " + cmbRemoteHost.Text, DTime =DateTime.Now, IsRS = true });
+
+            rcvSendData.Add(new DataForm { Buffer =txtSend.Text, Length = txtSend.Text.Length, IPPort = "[" + DateTime.Now + "]# SEND "+ cb.Content +" TO " + cmbRemoteHost.Text, DTime =DateTime.Now, IsRS = true });
         }
 
         private void GetIP()
@@ -174,7 +194,6 @@ namespace ControlLibrary
             cmbIpAddress.SelectedIndex = 0;
             cmbRemoteHost.ItemsSource = remoteIPList;
         }
-
     }
 
     public class CmbSelectionConverter : IValueConverter
@@ -262,6 +281,42 @@ namespace ControlLibrary
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class IPPortValidationRule : ValidationRule
+    {
+        public string ValidationType { get; set; }
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            string strValue = value as string;
+
+            if (string.IsNullOrEmpty(strValue))
+                return new ValidationResult(false, $"Value cannot be coverted to string.");
+
+            bool canConvert = false;
+            switch (ValidationType.Trim())
+            {
+
+                case "IP":
+                    canConvert = Regex.IsMatch(strValue.Trim(), @"^(\d{1,3}.){3}(\d{1,3})$");
+
+                    return canConvert ? new ValidationResult(true, null) : new ValidationResult(false, $"IP Address input is not required");
+
+                case "Port":
+                    int intVal = 0;
+                    canConvert = int.TryParse(strValue, out intVal);
+
+                    if (canConvert &&(intVal >= 0) &&(intVal <= 65535))
+                    {
+                        return new ValidationResult(true, null);
+                    }
+
+                    return  new ValidationResult(false, $"Port should be more than 0 and less than 65535");
+
+                default:
+                    throw new InvalidCastException($"{strValue} is not supported");
+            }
         }
     }
 }

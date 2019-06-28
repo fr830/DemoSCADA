@@ -95,7 +95,7 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <TextBox x:Name="hostPort" Height="30" Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}" >
+                    <TextBox x:Name="hostPort"  Height="30"  Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}" >
                         <TextBox.Style>
                             <Style TargetType="{x:Type TextBox}">
                                 <Setter Property="Text" Value="8080"/>
@@ -165,8 +165,8 @@
             <GroupBox Grid.Row="1" Header="接收设置">
                 <StackPanel Margin="3">
                     <WrapPanel   Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">
-                        <RadioButton GroupName="js" Content="ASCII" IsChecked="True" Margin="0,0,5,0"/>
-                        <RadioButton GroupName="js" Content="HEX" />
+                        <RadioButton GroupName="js" Content="ASCII" IsChecked="True" Margin="0,0,5,0" Name="rcvRadioASCII"/>
+                        <RadioButton GroupName="js" Content="HEX" Name="rcvRadioHEX"/>
                     </WrapPanel>
                     <CheckBox IsChecked="True" Content="按日志模式显示"   Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
                     <CheckBox IsChecked="True" Content="接收完自动换行"   Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
@@ -177,8 +177,8 @@
             <GroupBox Grid.Row="2" Header="发送设置">
                 <StackPanel Margin="3">
                     <WrapPanel   Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}">
-                        <RadioButton GroupName="fs" Content="ASCII" IsChecked="True" Margin="0,0,5,0"/>
-                        <RadioButton GroupName="fs" Content="HEX" />
+                        <RadioButton GroupName="fs" Content="ASCII" IsChecked="True" Margin="0,0,5,0" Name="sendRadioASCII"/>
+                        <RadioButton GroupName="fs" Content="HEX" Name="sendRadioHEX"/>
                     </WrapPanel>
                     <CheckBox IsChecked="True" Content="自动解释转义字符"   Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
                     <CheckBox IsChecked="True" Content="AT指令自动回车"   Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"/>
@@ -200,7 +200,7 @@
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <GroupBox Header="数据日志" Grid.Row="0">
-                <ListBox Name="listDisplayData" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="UpdateScrollBar">
+                <ListBox Name="listDisplayData" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid >
