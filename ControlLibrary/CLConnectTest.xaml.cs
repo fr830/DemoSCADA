@@ -125,9 +125,8 @@ namespace ControlLibrary
         }
 
         private void DisPlayDataAsync(DataForm dt)
-        {            
-            var cb = rcvRadioGroup.First(x => x.IsChecked == true);
-            this.Dispatcher.BeginInvoke(new Action(() => rcvSendData.Add(new DataForm { Buffer = dt.Buffer, Length = dt.Length, IPPort ="["+dt.DTime+"]# RECV " + cb.Content +  " FROM " + dt.IPPort, DTime = dt.DTime, IsRS = dt.IsRS })));
+        {
+            this.Dispatcher.BeginInvoke(new Action(() =>{ var cb = rcvRadioGroup.First(x => x.IsChecked == true); rcvSendData.Add(new DataForm { Buffer = dt.Buffer, Length = dt.Length, IPPort = "[" + dt.DTime + "]# RECV " + cb.Content + " FROM " + dt.IPPort, DTime = dt.DTime, IsRS = dt.IsRS }); }));
         }
 
         private void PartStringToIPPort(string s,out string ip, out int port)
@@ -282,41 +281,5 @@ namespace ControlLibrary
         {
             throw new NotImplementedException();
         }
-    }
-
-    public class IPPortValidationRule : ValidationRule
-    {
-        public string ValidationType { get; set; }
-        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
-        {
-            string strValue = value as string;
-
-            if (string.IsNullOrEmpty(strValue))
-                return new ValidationResult(false, $"Value cannot be coverted to string.");
-
-            bool canConvert = false;
-            switch (ValidationType.Trim())
-            {
-
-                case "IP":
-                    canConvert = Regex.IsMatch(strValue.Trim(), @"^(\d{1,3}.){3}(\d{1,3})$");
-
-                    return canConvert ? new ValidationResult(true, null) : new ValidationResult(false, $"IP Address input is not required");
-
-                case "Port":
-                    int intVal = 0;
-                    canConvert = int.TryParse(strValue, out intVal);
-
-                    if (canConvert &&(intVal >= 0) &&(intVal <= 65535))
-                    {
-                        return new ValidationResult(true, null);
-                    }
-
-                    return  new ValidationResult(false, $"Port should be more than 0 and less than 65535");
-
-                default:
-                    throw new InvalidCastException($"{strValue} is not supported");
-            }
-        }
-    }
+    }  
 }
