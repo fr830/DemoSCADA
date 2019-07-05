@@ -191,7 +191,7 @@
 
         <Style x:Key="AssetpdTabControlStyle" TargetType="{x:Type TabControl}" x:Name="TabControl">
             <Setter Property="SnapsToDevicePixels" Value="true"/>
-            <Setter Property="TabStripPlacement" Value="Bottom"/>
+            <Setter Property="TabStripPlacement" Value="Bottom,Left"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Template">
@@ -316,7 +316,7 @@
         </Style>
     </Window.Resources>
     
-    <Grid Margin="10,10,10,0" >
+    <Grid Margin="5,5,5,0" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="70*"/>
             <ColumnDefinition Width="30*"/>
@@ -353,24 +353,32 @@
                 <TabItem Header="记录查询" />
                 <TabItem Header="报表系统" />
                 <TabItem Header="系统拓扑图" />
-                <TabItem Header="备用0" />
-                <TabItem Header="备用1" />
-                <TabItem Header="备用2" />
-                <TabItem Header="备用3" />
-                <TabItem Header="备用4" />
-                <TabItem Header="备用5" />
-                <TabItem Header="备用6" />
-                <TabItem Header="备用7" />
-                <TabItem Header="备用8" />
-                <TabItem Header="备用9" />
-                <TabItem Header="备用10" />
+
             </TabControl>
         </Border>
         
        
 
         <Border  Grid.Column="1" Grid.Row="1"  BorderBrush="Gray"  BorderThickness="1">
-            <TextBlock Text="固定的按钮和需要一直显示的变量信息，视频信号[可能无]" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="固定的按钮和需要一直显示的变量信息" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Expander Grid.Row="1" >
+                    <Expander.Header>
+                        <WrapPanel>
+                            <TextBlock Text="视频信号" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </WrapPanel>
+                    </Expander.Header>
+                    <Expander.Content>
+                        <TextBlock Text="无" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Expander.Content>
+                </Expander>
+
+                <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" Background="AliceBlue"  ShowsPreview="True" Padding="7" ResizeDirection="Rows" Height="2"/>
+            </Grid>
         </Border>
        
         <StatusBar  Grid.Row="2" Grid.ColumnSpan="2" >
