@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -25,6 +26,103 @@ namespace ControlLibrary
         void CloseConnect();
         void RcvData();
         void SendData(byte[] buffer);
+    }
+
+    public class PingTest : IConnect
+    {
+        private string _localIPAddress = "127.0.0.1";
+        private Ping pinger;
+        DataForm dt = new DataForm();
+        public string LocalIPAddress
+        {
+            get { return _localIPAddress; }
+            set
+            {
+                IPAddress temp;
+                if (IPAddress.TryParse(value, out temp))
+                {
+                    _localIPAddress = value;
+                }
+                else
+                {
+                    _localIPAddress = "127.0.0.1";
+                }
+            }
+        }
+
+        public int LocalPort { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string RemoteIPAddress { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int RemotePort { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public event GetRcvBuffer GetRcvBufferEvent;
+
+        public void CloseConnect()
+        {
+            if (pinger != null)
+            {
+                pinger.Dispose();
+                pinger = null;
+            }
+        }
+
+        public bool OpenConnect()
+        {
+            bool pingable = false;
+
+            try
+            {
+                pinger = new Ping();
+
+                if (GetRcvBufferEvent != null)
+                {
+                    string strTemp = "正在Ping " + LocalIPAddress.ToString();
+                    dt.SetValue(true, strTemp, "", strTemp.Length);
+                    GetRcvBufferEvent(dt);
+                }
+
+                PingReply reply = pinger.Send(LocalIPAddress);
+
+                if (GetRcvBufferEvent != null)
+                {
+                    string strTemp = "来自 " + LocalIPAddress.ToString() + " 的回复:";
+                    string strBackInfo = "Status :  " + reply.Status + "  Time : " + reply.RoundtripTime.ToString() + "  Address : " + reply.Address;
+                    dt.SetValue(false, strBackInfo, strTemp, strBackInfo.Length);
+                    GetRcvBufferEvent(dt);
+                }
+
+                pingable = reply.Status == IPStatus.Success;
+            }
+            catch (PingException e)
+            {
+                MessageBox.Show("PingException: "+e.Message);
+                pingable = false;
+            }
+            finally
+            {
+                if (pinger != null)
+                {
+                    pinger.Dispose();
+                    pinger = null;
+                }
+            }
+
+            return pingable;
+        }
+
+        public void RcvData()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SendData(byte[] buffer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public PingTest(string localIP)
+        {
+            LocalIPAddress = localIP;
+        }
     }
 
     public class UDPConnect : IConnect

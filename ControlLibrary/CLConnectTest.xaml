@@ -86,7 +86,7 @@
                                 <Setter Property="Text" Value="(3)本地主机端口"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Path=SelectedItem,ElementName=cmbProtocolType,Converter={StaticResource cmbSelectionCvt}}" Value="Ping">
-                                        <Setter Property="Text" Value="(3)Ping次数"/>
+                                        <Setter Property="Visibility" Value="Hidden"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Path=SelectedItem,ElementName=cmbProtocolType,Converter={StaticResource cmbSelectionCvt}}" Value="TCP Client">
                                         <Setter Property="Text" Value="(3)远程主机端口"/>
@@ -95,13 +95,13 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <TextBox x:Name="hostPort"  Height="30"  Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}" >
+                    <TextBox x:Name="hostPort" DataContext="{Binding RelativeSource={RelativeSource  Mode=FindAncestor,AncestorType=local:CLConnectTest}}" Height="30"  Margin="{Binding Margin,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type StackPanel}}}"  ToolTip="{Binding RelativeSource={RelativeSource self},
+                  Path=(Validation.Errors)[0].ErrorContent}">
                         <TextBox.Style>
                             <Style TargetType="{x:Type TextBox}">
-                                <Setter Property="Text" Value="8080"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Path=SelectedItem,ElementName=cmbProtocolType,Converter={StaticResource cmbSelectionCvt}}" Value="Ping">
-                                        <Setter Property="Text" Value="4"/>
+                                        <Setter Property="Visibility" Value="Hidden"/>
                                     </DataTrigger>
                                     <DataTrigger  Binding="{Binding RelativeSource={RelativeSource  Mode=FindAncestor,AncestorType=local:CLConnectTest}, Path=IsConnected}" Value="True">
                                         <Setter Property="IsEnabled" Value="False"/>
@@ -109,6 +109,13 @@
                                 </Style.Triggers>
                             </Style>
                         </TextBox.Style>
+                        <TextBox.Text>
+                            <Binding Path="Port" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <local:PortRangeRule PortOrCnt="Port" />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
                     </TextBox>
 
                     <Button  HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" IsDefault="True"

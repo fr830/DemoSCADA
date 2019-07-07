@@ -34,6 +34,7 @@ namespace ControlLibrary
 
         public static readonly RoutedCommand SendCommand;
         public static readonly DependencyProperty IsConnectedProperty;
+        public static readonly DependencyProperty PortProperty;
         IConnect iConnectType;
         private ObservableCollection<DataForm> rcvSendData = new ObservableCollection<DataForm>();
         List<RadioButton> rcvRadioGroup;
@@ -48,6 +49,7 @@ namespace ControlLibrary
         static CLConnectTest()
         {
             IsConnectedProperty = DependencyProperty.Register("IsConnected", typeof(bool), typeof(CLConnectTest), new PropertyMetadata((bool)false));
+            PortProperty = DependencyProperty.Register("Port", typeof(int), typeof(CLConnectTest), new PropertyMetadata((int)8080));
             SendCommand = new RoutedCommand();
         }
 
@@ -55,6 +57,12 @@ namespace ControlLibrary
         {
             get { return (bool)GetValue(IsConnectedProperty); } 
             set { SetValue(IsConnectedProperty, value); }
+        }
+
+        public int Port
+        {
+            get { return (int)GetValue(PortProperty); }
+            set { SetValue(PortProperty, value); }
         }
 
         private void Init()
@@ -96,20 +104,22 @@ namespace ControlLibrary
             }
 
             string strProtocol = cmbProtocolType.Text;
-            string strIPAddress = cmbIpAddress.SelectedItem.ToString();
-
-            int iPort;
-            int.TryParse(hostPort.Text, out iPort);
+            string strIPAddress = cmbIpAddress.Text;
 
             switch (strProtocol)
             {
                 case "UDP":
-                    iConnectType = new UDPConnect(strIPAddress, iPort);
+                    iConnectType = new UDPConnect(strIPAddress, Port);
+                    break;
+                case "Ping":
+                    iConnectType = new PingTest(strIPAddress);
                     break;
                 default:
-                    iConnectType = new UDPConnect(strIPAddress, iPort);
+                    iConnectType = new UDPConnect(strIPAddress, Port);
                     break;
             }
+
+            iConnectType.GetRcvBufferEvent += DisPlayDataAsync;
 
             if (iConnectType.OpenConnect())
             {
@@ -120,13 +130,22 @@ namespace ControlLibrary
                 IsConnected = false;
                 return;
             }
-
-            iConnectType.GetRcvBufferEvent += DisPlayDataAsync;
         }
 
         private void DisPlayDataAsync(DataForm dt)
         {
-            this.Dispatcher.BeginInvoke(new Action(() =>{ var cb = rcvRadioGroup.First(x => x.IsChecked == true); rcvSendData.Add(new DataForm { Buffer = dt.Buffer, Length = dt.Length, IPPort = "[" + dt.DTime + "]# RECV " + cb.Content + " FROM " + dt.IPPort, DTime = dt.DTime, IsRS = dt.IsRS }); }));
+            this.Dispatcher.BeginInvoke(new Action(() =>{
+                string strProtocol = cmbProtocolType.Text;
+                if (string.Equals(strProtocol,"Ping"))
+                {
+                    rcvSendData.Add(new DataForm { Buffer = dt.Buffer, Length = dt.Length, IPPort = "[" + dt.DTime + "] " + dt.IPPort, DTime = dt.DTime, IsRS = dt.IsRS });
+                }
+                else
+                {
+                    var cb = rcvRadioGroup.First(x => x.IsChecked == true);
+                    rcvSendData.Add(new DataForm { Buffer = dt.Buffer, Length = dt.Length, IPPort = "[" + dt.DTime + "]# RECV " + cb.Content + " FROM " + dt.IPPort, DTime = dt.DTime, IsRS = dt.IsRS });
+                }
+            }));
         }
 
         private void PartStringToIPPort(string s,out string ip, out int port)
@@ -281,5 +300,31 @@ namespace ControlLibrary
         {
             throw new NotImplementedException();
         }
-    }  
+    }
+
+    public class PortRangeRule : ValidationRule
+    {
+        public string PortOrCnt { get; set; }
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            int number;
+            if (!int.TryParse((string)value, out number))
+            {
+                return new ValidationResult(false, "非数值性数字");
+            }
+
+            if (string.Equals(PortOrCnt,"Port"))
+            {
+                if (number < 0 || number > 65535)
+                {
+                    string s = string.Format("超出端口范围（0 - 65535）");
+                    return new ValidationResult(false, s);
+                }
+
+                return ValidationResult.ValidResult;
+            }
+
+            return ValidationResult.ValidResult;
+        }
+    }
 }
