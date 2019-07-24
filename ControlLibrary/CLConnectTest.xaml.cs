@@ -134,6 +134,7 @@ namespace ControlLibrary
 
         private void DisPlayDataAsync(DataForm dt)
         {
+           
             this.Dispatcher.BeginInvoke(new Action(() =>{
                 string strProtocol = cmbProtocolType.Text;
                 if (string.Equals(strProtocol,"Ping"))
