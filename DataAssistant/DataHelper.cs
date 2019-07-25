@@ -1,5 +1,4 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -8,24 +7,23 @@ using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
+using Log;
 
 namespace DatabaseLib
 {
     public static class DataHelper
     {
 
-        static string m_ConnStr = @"Provider= Microsoft.Ace.OLEDB.12.0;Data Source = d:\Monitor\DataConfig\Data.accdb";
-        static string m_Path = @"d:\Monitor\DataConfig";
+        static string m_ConnStr = @"Provider= Microsoft.Ace.OLEDB.12.0;Data Source = " + System.Environment.CurrentDirectory + @"\Data\Data.accdb";
+        static string m_Path = System.Environment.CurrentDirectory + @"\HisData\";
         static string m_host = Environment.MachineName;
         static string m_type = "ACCESS";
+        static string m_SaveBytes = "FALSE";
         //数据库工厂接口  
 
-        const string INIPATH = @"d:\Monitor\DataConfig\Config.ini";
-        const string DATALOGSOURCE = "Monitor Operations";
-        const string DATALOGNAME = "Monitor Log";
+        static string INIPATH = System.Environment.CurrentDirectory + @"\Config.ini";
         const int STRINGMAX = 255;
 
-        static EventLog Log;
         #region GetInstance
         private static IDataFactory _ins;
 
@@ -58,9 +56,6 @@ namespace DatabaseLib
         /// <param name="dbtype">数据库枚举</param>  
         static DataHelper()
         {
-            if (!EventLog.SourceExists(DATALOGSOURCE))
-                EventLog.CreateEventSource(DATALOGSOURCE, DATALOGNAME);
-            Log = new EventLog(DATALOGNAME);
             try
             {
                 if (File.Exists(INIPATH))
@@ -68,12 +63,19 @@ namespace DatabaseLib
                     StringBuilder sb = new StringBuilder(STRINGMAX);
                     WinAPI.GetPrivateProfileString("HOST", "SERVER", m_host, sb, STRINGMAX, INIPATH);
                     m_host = sb.ToString();
-                    WinAPI.GetPrivateProfileString("DATABASE", "CONNSTRING", m_ConnStr, sb, STRINGMAX, INIPATH);
-                    m_ConnStr = sb.ToString();
                     WinAPI.GetPrivateProfileString("DATABASE", "ARCHIVE", m_Path, sb, STRINGMAX, INIPATH);
                     m_Path = sb.ToString();
                     WinAPI.GetPrivateProfileString("DATABASE", "TYPE", m_type, sb, STRINGMAX, INIPATH);
                     m_type = sb.ToString();
+
+                    WinAPI.GetPrivateProfileString("DATABASE", "SAVEBYTES", m_SaveBytes, sb, STRINGMAX, INIPATH);
+                    m_SaveBytes = sb.ToString();
+
+                    if (m_type.ToUpper().Equals("MSSQL"))
+                    {
+                        WinAPI.GetPrivateProfileString("DATABASE", "CONNSTRING", m_ConnStr, sb, STRINGMAX, INIPATH);
+                        m_ConnStr = sb.ToString();
+                    }
                 }
 
                 IPAddress addr;
@@ -157,12 +159,12 @@ namespace DatabaseLib
             Exception exp = e;
             while (exp != null)
             {
-                err += string.Format("\n {0}", exp.Message);
+                err += string.Format("{0}\n ", exp.Message);
                 exp = exp.InnerException;
             }
-            err += string.Format("\n {0}", e.StackTrace);
-            Log.Source = DATALOGSOURCE;
-            Log.WriteEntry(err, EventLogEntryType.Error);
+            err += string.Format("{0}\n ", e.StackTrace);
+
+            Log4Net.AddLog(err, InfoLevel.ERROR);
         }
 
         public static string GetNullableString(this DbDataReader reader, int index)
@@ -202,20 +204,20 @@ namespace DatabaseLib
             return num3;
         }
 
-        public static object GetSqlValue(this DbDataReader reader, int index)
-        {
-            SqlDataReader dataReader = reader as SqlDataReader;
-            if (dataReader != null)
-            {
-                return dataReader.GetSqlValue(index);
-            }
-            var mq = reader as MySqlDataReader;
-            if (mq != null)
-            {
-                return mq.GetValue(index);
-            }
-            return "";
-        }
+        //public static object GetSqlValue(this DbDataReader reader, int index)
+        //{
+        //    SqlDataReader dataReader = reader as SqlDataReader;
+        //    if (dataReader != null)
+        //    {
+        //        return dataReader.GetSqlValue(index);
+        //    }
+        //    var mq = reader as MySqlDataReader;
+        //    if (mq != null)
+        //    {
+        //        return mq.GetValue(index);
+        //    }
+        //    return "";
+        //}
     }
 
 
