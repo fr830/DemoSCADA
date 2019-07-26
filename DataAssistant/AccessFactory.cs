@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Data.OleDb;
-
+using DAO = Microsoft.Office.Interop.Access.Dao;
 
 namespace DatabaseLib
 {
@@ -14,40 +14,57 @@ namespace DatabaseLib
     {
         public bool BulkCopy(IDataReader reader, string tableName, string command = null, SqlBulkCopyOptions options = SqlBulkCopyOptions.Default)
         {
-            using (OleDbConnection m_Conn = new OleDbConnection(DataHelper.ConnectString))
+            HDAAccessReader accessReader = reader as HDAAccessReader;
+
+            if (accessReader == null)
             {
-                OleDbTransaction sqlT = null;
-                
-                try
+                CallException("批量拷贝数据到Access数据库失败：BulkCopy 函数中，IDataReader 转 HDAAccessReader 失败！");
+                return false;
+            }
+
+
+
+            DAO.DBEngine dbEngine = new DAO.DBEngine();
+            DAO.Database db =  dbEngine.OpenDatabase(DataHelper.DataPath);
+
+            if (!string.IsNullOrEmpty(command))
+            {
+                db.Execute(command);
+            }
+             
+            DAO.Recordset rs = db.OpenRecordset(tableName);
+
+            try
+            {
+                DAO.Field[] myFields = new DAO.Field[accessReader.FieldCount];
+                myFields[0] = rs.Fields[accessReader.GetName(0)];
+                myFields[1] = rs.Fields[accessReader.GetName(1)];
+                myFields[2] = rs.Fields[accessReader.GetName(2)];
+
+                while (accessReader.Read())
                 {
-                    if (m_Conn.State == ConnectionState.Closed)
-                        m_Conn.Open();
-                    sqlT = m_Conn.BeginTransaction();
-                    if (!string.IsNullOrEmpty(command))
-                    {
-                        OleDbCommand cmd = new OleDbCommand(command, m_Conn);
-                        cmd.Transaction = sqlT;
-                        cmd.ExecuteNonQuery();
-                    }
-                    SqlBulkCopy copy = new SqlBulkCopy(m_Conn, options, sqlT);
-                    copy.DestinationTableName = tableName;
-                    copy.BulkCopyTimeout = 100000;
-                    //copy.BatchSize = _capacity;
-                    copy.WriteToServer(reader);//如果写入失败，考虑不能无限增加线程数
-                                               //Clear();
-                    sqlT.Commit();
-                    m_Conn.Close();
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    if (sqlT != null)
-                        sqlT.Rollback();
-                    m_Conn.Close();
-                    CallException(e.Message);
-                    return false;
+                    rs.AddNew();
+                    myFields[0].Value = accessReader.GetValue(0);
+                    myFields[1].Value = accessReader.GetValue(1);
+                    myFields[2].Value = accessReader.GetValue(2);
+
+                    rs.Update();
                 }
             }
+            catch (Exception e)
+            {
+                CallException(e.Message);
+
+                return false;
+            }
+            finally
+            {
+                rs.Close();
+                db.Close();
+            }
+
+            return true;
+
         }
 
         public void CallException(string message)

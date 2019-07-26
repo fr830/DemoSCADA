@@ -13,12 +13,13 @@ namespace DatabaseLib
 {
     public static class DataHelper
     {
-
-        static string m_ConnStr = @"Provider= Microsoft.Ace.OLEDB.12.0;Data Source = " + System.Environment.CurrentDirectory + @"\Data\Data.accdb";
+        static string m_DataPath = System.Environment.CurrentDirectory + @"\Data\Data.accdb";
+        static string m_ConnStr = @"Provider= Microsoft.Ace.OLEDB.12.0;Data Source = " + m_DataPath;
         static string m_Path = System.Environment.CurrentDirectory + @"\HisData\";
         static string m_host = Environment.MachineName;
         static string m_type = "ACCESS";
         static string m_SaveBytes = "FALSE";
+        static string m_HaveVedio = "FALSE";
         //数据库工厂接口  
 
         static string INIPATH = System.Environment.CurrentDirectory + @"\Config.ini";
@@ -45,6 +46,11 @@ namespace DatabaseLib
             get { return m_ConnStr; }
         }
 
+        public static string DataPath
+        {
+            get { return m_DataPath; }
+        }
+
         public static string HdaPath
         {
             get { return m_Path; }
@@ -68,8 +74,11 @@ namespace DatabaseLib
                     WinAPI.GetPrivateProfileString("DATABASE", "TYPE", m_type, sb, STRINGMAX, INIPATH);
                     m_type = sb.ToString();
 
-                    WinAPI.GetPrivateProfileString("DATABASE", "SAVEBYTES", m_SaveBytes, sb, STRINGMAX, INIPATH);
+                    WinAPI.GetPrivateProfileString("OTHERS", "SAVEBYTES", m_SaveBytes, sb, STRINGMAX, INIPATH);
                     m_SaveBytes = sb.ToString();
+
+                    WinAPI.GetPrivateProfileString("OTHERS", "HAVEVEDIO", m_HaveVedio, sb, STRINGMAX, INIPATH);
+                    m_HaveVedio = sb.ToString();
 
                     if (m_type.ToUpper().Equals("MSSQL"))
                     {
@@ -92,7 +101,7 @@ namespace DatabaseLib
                         _ins = new AccessFactory();
                         break;
                     default:
-                        _ins = new MssqlFactory();
+                        _ins = new AccessFactory();
                         break;
                 }
             }
