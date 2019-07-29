@@ -64,7 +64,7 @@ namespace ProtocolConfig
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            LoadFromDatabase();
+            //LoadFromDatabase();
         }
 
         private void LoadFromDatabase()
@@ -73,20 +73,91 @@ namespace ProtocolConfig
             string sql = "SELECT ID,GroupID,TagName,Address,DataType,DataSize,IsActive,IsArchive,DefaultValue,Description,Maximum,Minimum,Cycle from Protocol where DataType<12";
 
             using (var reader = DataHelper.Instance.ExecuteReader(sql))
-            {
+            {                
+                int id = -1, groupId = 0, dataType = -1, dataSize = 1, isActive = 1, isArchive = 0,  maximum = 0, minimum = 0, cycle = 0;
+                string tagName = "", address = "", description = "";
+                bool bActive = false, bArchive = false, bError = false;
 
-                reader.Read();
+                while (reader.Read())
+                {
+                    //if (!int.TryParse(reader.GetValue(0).ToString(), out id))
+                    //{
+                    //    bError = true;
+                    //}
 
-                short i = reader.GetInt16(0);
+                    //if (!int.TryParse(reader.GetValue(1).ToString(),out groupId))
+                    //{
+                    //    bError = true;
+                    //}
 
-                //while (reader.Read())
-                //{
-                //    TagData tag = new TagData(reader.GetInt16(0), reader.GetInt16(1), reader.GetString(2), reader.GetString(3), reader.GetByte(4),
-                //        (ushort)reader.GetInt16(5), reader.GetBoolean(6),  false, false, reader.GetBoolean(7),
-                //        reader.GetValue(8), reader.GetNullableString(9), reader.GetFloat(10), reader.GetFloat(11), reader.GetInt32(12));
-                //    list.Add(tag);
-                //}
+                    //tagName = reader.GetValue(2).ToString();
+                    //if (string.IsNullOrEmpty(tagName))
+                    //{
+                    //    bError = true;
+                    //}
+
+                    //address = reader.GetValue(3).ToString();
+                    //if (string.IsNullOrEmpty(address))
+                    //{
+                    //    bError = true;
+                    //}
+
+                    //if (!int.TryParse(reader.GetValue(4).ToString(),out dataType))
+                    //{
+                    //    bError = true;
+                    //}
+
+                    //if (!int.TryParse(reader.GetValue(5).ToString(),out dataSize))
+                    //{
+                    //    bError = true;
+                    //}
+
+                    //if (!int.TryParse(reader.GetValue(6).ToString(),out isActive))
+                    //{
+                    //    bError = true;
+                    //}
+                    //else
+                    //{
+                    //    if(isActive == 1)
+                    //    {
+                    //        bActive = true;
+                    //    }
+                    //    else
+                    //    {
+                    //        bActive = false;
+                    //    }
+                    //}
+
+                    //if (!int.TryParse(reader.GetValue(7).ToString(), out isArchive))
+                    //{
+                    //    bError = true;
+                    //}
+                    //else
+                    //{
+                    //    if (isArchive == 1)
+                    //    {
+                    //        bArchive = true;
+                    //    }
+                    //    else
+                    //    {
+                    //        bArchive = false;
+                    //    }
+                    //}
+
+                    //defaultVaule = reader.GetValue(8).ToString();
+                    //if (string.IsNullOrEmpty(defaultVaule))
+                    //{
+                    //    bError = true;
+                    //}
+                    
+
+                    TagData tag = new TagData((short)id ,(short)groupId, tagName, address, (byte)dataType,
+                        (ushort)dataSize, bActive, false, false, bArchive,
+                        reader.GetValue(8), reader.GetNullableString(9), reader.GetFloat(10), reader.GetFloat(11), reader.GetInt32(12));
+                    list.Add(tag);
+                }
             }
+
             list.Sort();
             bindSourceProtocol.DataSource = new SortableBindingList<TagData>(list);
             tagCount.Text = list.Count.ToString();
