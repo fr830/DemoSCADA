@@ -74,13 +74,18 @@ namespace ProtocolConfig
 
             using (var reader = DataHelper.Instance.ExecuteReader(sql))
             {
-                while (reader.Read())
-                {
-                    TagData tag = new TagData(reader.GetInt16(0), reader.GetInt16(1), reader.GetString(2), reader.GetString(3), reader.GetByte(4),
-                        (ushort)reader.GetInt16(5), reader.GetBoolean(6),  false, false, reader.GetBoolean(7),
-                        reader.GetValue(8), reader.GetNullableString(9), reader.GetFloat(10), reader.GetFloat(11), reader.GetInt32(12));
-                    list.Add(tag);
-                }
+
+                reader.Read();
+
+                short i = reader.GetInt16(0);
+
+                //while (reader.Read())
+                //{
+                //    TagData tag = new TagData(reader.GetInt16(0), reader.GetInt16(1), reader.GetString(2), reader.GetString(3), reader.GetByte(4),
+                //        (ushort)reader.GetInt16(5), reader.GetBoolean(6),  false, false, reader.GetBoolean(7),
+                //        reader.GetValue(8), reader.GetNullableString(9), reader.GetFloat(10), reader.GetFloat(11), reader.GetInt32(12));
+                //    list.Add(tag);
+                //}
             }
             list.Sort();
             bindSourceProtocol.DataSource = new SortableBindingList<TagData>(list);
