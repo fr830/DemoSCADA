@@ -246,7 +246,8 @@ namespace ProtocolConfig
         {
             //return this._groupId.CompareTo(other._groupId);
             int cmp = this._groupId.CompareTo(other._groupId);
-            return cmp == 0 ? this._name.CompareTo(other._name) : cmp;
+            return cmp == 0 ? this._id.CompareTo(other._id) : cmp;
+            //return cmp == 0 ? this._name.CompareTo(other._name) : cmp;
         }
     }
 

@@ -30,17 +30,17 @@
         {
             this.components = new System.ComponentModel.Container();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.tagCount = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripCollect = new System.Windows.Forms.ToolStrip();
             this.btnAdd = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.btnDelete = new System.Windows.Forms.ToolStripButton();
+            this.btnClear = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
+            this.btnSave = new System.Windows.Forms.ToolStripButton();
+            this.btnQuit = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.connectTest = new System.Windows.Forms.ToolStripButton();
             this.dGVAccess = new System.Windows.Forms.DataGridView();
-            this.tagCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.bindSourceProtocol = new System.Windows.Forms.BindingSource(this.components);
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -55,7 +55,7 @@
             this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.statusStrip1.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
+            this.toolStripCollect.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dGVAccess)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindSourceProtocol)).BeginInit();
             this.SuspendLayout();
@@ -64,28 +64,34 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tagCount});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 428);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 684);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(800, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1238, 22);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // toolStrip1
+            // tagCount
             // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tagCount.Name = "tagCount";
+            this.tagCount.Size = new System.Drawing.Size(56, 17);
+            this.tagCount.Text = "变量数：";
+            // 
+            // toolStripCollect
+            // 
+            this.toolStripCollect.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnAdd,
-            this.toolStripButton2,
-            this.toolStripButton3,
+            this.btnDelete,
+            this.btnClear,
             this.toolStripSeparator1,
-            this.toolStripButton4,
-            this.toolStripButton5,
+            this.btnSave,
+            this.btnQuit,
             this.toolStripSeparator2,
             this.connectTest});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(800, 25);
-            this.toolStrip1.TabIndex = 1;
-            this.toolStrip1.Text = "toolStrip1";
+            this.toolStripCollect.Location = new System.Drawing.Point(0, 0);
+            this.toolStripCollect.Name = "toolStripCollect";
+            this.toolStripCollect.Size = new System.Drawing.Size(1238, 25);
+            this.toolStripCollect.TabIndex = 1;
+            this.toolStripCollect.Text = "toolStrip1";
             // 
             // btnAdd
             // 
@@ -96,42 +102,46 @@
             this.btnAdd.Text = "增加";
             this.btnAdd.Click += new System.EventHandler(this.BtnAdd_Click);
             // 
-            // toolStripButton2
+            // btnDelete
             // 
-            this.toolStripButton2.Image = global::ProtocolConfig.Properties.Resources.Delete;
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(52, 22);
-            this.toolStripButton2.Text = "删除";
+            this.btnDelete.Image = global::ProtocolConfig.Properties.Resources.Delete;
+            this.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(52, 22);
+            this.btnDelete.Text = "删除";
+            this.btnDelete.Click += new System.EventHandler(this.BtnDelete_Click);
             // 
-            // toolStripButton3
+            // btnClear
             // 
-            this.toolStripButton3.Image = global::ProtocolConfig.Properties.Resources.Clear;
-            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(52, 22);
-            this.toolStripButton3.Text = "清除";
+            this.btnClear.Image = global::ProtocolConfig.Properties.Resources.Clear;
+            this.btnClear.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(52, 22);
+            this.btnClear.Text = "清除";
+            this.btnClear.Click += new System.EventHandler(this.BtnClear_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // toolStripButton4
+            // btnSave
             // 
-            this.toolStripButton4.Image = global::ProtocolConfig.Properties.Resources.PSave;
-            this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton4.Name = "toolStripButton4";
-            this.toolStripButton4.Size = new System.Drawing.Size(52, 22);
-            this.toolStripButton4.Text = "保存";
+            this.btnSave.Image = global::ProtocolConfig.Properties.Resources.PSave;
+            this.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(52, 22);
+            this.btnSave.Text = "保存";
+            this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
             // 
-            // toolStripButton5
+            // btnQuit
             // 
-            this.toolStripButton5.Image = global::ProtocolConfig.Properties.Resources.Exit;
-            this.toolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton5.Name = "toolStripButton5";
-            this.toolStripButton5.Size = new System.Drawing.Size(52, 22);
-            this.toolStripButton5.Text = "退出";
+            this.btnQuit.Image = global::ProtocolConfig.Properties.Resources.Exit;
+            this.btnQuit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnQuit.Name = "btnQuit";
+            this.btnQuit.Size = new System.Drawing.Size(52, 22);
+            this.btnQuit.Text = "退出";
+            this.btnQuit.Click += new System.EventHandler(this.BtnQuit_Click);
             // 
             // toolStripSeparator2
             // 
@@ -150,8 +160,9 @@
             // dGVAccess
             // 
             this.dGVAccess.AllowUserToAddRows = false;
+            this.dGVAccess.AllowUserToOrderColumns = true;
+            this.dGVAccess.AllowUserToResizeRows = false;
             this.dGVAccess.AutoGenerateColumns = false;
-            this.dGVAccess.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dGVAccess.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
             this.Column2,
@@ -169,19 +180,16 @@
             this.dGVAccess.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dGVAccess.Location = new System.Drawing.Point(0, 25);
             this.dGVAccess.Name = "dGVAccess";
+            this.dGVAccess.RowHeadersVisible = false;
             this.dGVAccess.RowTemplate.Height = 23;
-            this.dGVAccess.Size = new System.Drawing.Size(800, 403);
+            this.dGVAccess.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dGVAccess.Size = new System.Drawing.Size(1238, 659);
             this.dGVAccess.TabIndex = 2;
-            // 
-            // tagCount
-            // 
-            this.tagCount.Name = "tagCount";
-            this.tagCount.Size = new System.Drawing.Size(56, 17);
-            this.tagCount.Text = "变量数：";
             // 
             // Column1
             // 
             this.Column1.DataPropertyName = "Name";
+            this.Column1.Frozen = true;
             this.Column1.HeaderText = "标签名";
             this.Column1.Name = "Column1";
             this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
@@ -275,17 +283,18 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1238, 706);
             this.Controls.Add(this.dGVAccess);
-            this.Controls.Add(this.toolStrip1);
+            this.Controls.Add(this.toolStripCollect);
             this.Controls.Add(this.statusStrip1);
             this.Name = "MainForm";
             this.Text = "协议定制";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
+            this.toolStripCollect.ResumeLayout(false);
+            this.toolStripCollect.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dGVAccess)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindSourceProtocol)).EndInit();
             this.ResumeLayout(false);
@@ -296,14 +305,14 @@
         #endregion
 
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStrip toolStripCollect;
         private System.Windows.Forms.DataGridView dGVAccess;
         private System.Windows.Forms.ToolStripButton btnAdd;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
-        private System.Windows.Forms.ToolStripButton toolStripButton3;
+        private System.Windows.Forms.ToolStripButton btnDelete;
+        private System.Windows.Forms.ToolStripButton btnClear;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton toolStripButton4;
-        private System.Windows.Forms.ToolStripButton toolStripButton5;
+        private System.Windows.Forms.ToolStripButton btnSave;
+        private System.Windows.Forms.ToolStripButton btnQuit;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton connectTest;
         private System.Windows.Forms.ToolStripStatusLabel tagCount;

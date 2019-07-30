@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using DatabaseLib;
 using Log;
 using DataService;
+using System.Data.SqlClient;
 
 namespace ProtocolConfig
 {
@@ -34,18 +35,20 @@ namespace ProtocolConfig
             col.ValueMember = "DataType";
         }
 
-
-
         private void BtnAdd_Click(object sender, EventArgs e)
         {
-            Storage va = new Storage();
-            va.Single = 3.2f;
-            List<HistoryData> _hda = new List<HistoryData>() {
-                new HistoryData(1,QUALITIES.QUALITY_GOOD, va,DateTime.Now),
-                new HistoryData(1, QUALITIES.QUALITY_GOOD, va, DateTime.Now),
-                new HistoryData(1, QUALITIES.QUALITY_GOOD, va, DateTime.Now) };
+            AddTag();
+        }
 
-            DataHelper.Instance.BulkCopy(new HDAAccessReader(_hda), "Log");
+
+        private void AddTag()
+        {
+            TagData tag = new TagData((short)(list.Count == 0 ? 1 : list.Max(x => x.ID) + 1), 0, "", "", 1, 1, true, false, false, false, null, "", 0, 0, 0);
+            bindSourceProtocol.Add(tag);
+            int index = list.BinarySearch(tag);
+            if (index < 0) index = ~index;
+            list.Insert(index, tag);
+            dGVAccess.FirstDisplayedScrollingRowIndex = bindSourceProtocol.Count - 1;
         }
 
         private void ConnectTest_Click(object sender, EventArgs e)
@@ -64,103 +67,87 @@ namespace ProtocolConfig
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            //LoadFromDatabase();
+            LoadFromDatabase();
         }
 
         private void LoadFromDatabase()
         {
+            List<TagData> data = new List<TagData>();
             list.Clear();
-            string sql = "SELECT ID,GroupID,TagName,Address,DataType,DataSize,IsActive,IsArchive,DefaultValue,Description,Maximum,Minimum,Cycle from Protocol where DataType<12";
+            string sql = "SELECT Id,GroupID,TagName,Address,DataType,DataSize,IsActive,Archive,DefaultValue,Description,Maximum,Minimum,Cycle from Protocol where DataType<12";
 
             using (var reader = DataHelper.Instance.ExecuteReader(sql))
             {                
-                int id = -1, groupId = 0, dataType = -1, dataSize = 1, isActive = 1, isArchive = 0,  maximum = 0, minimum = 0, cycle = 0;
-                string tagName = "", address = "", description = "";
-                bool bActive = false, bArchive = false, bError = false;
-
                 while (reader.Read())
                 {
-                    //if (!int.TryParse(reader.GetValue(0).ToString(), out id))
-                    //{
-                    //    bError = true;
-                    //}
-
-                    //if (!int.TryParse(reader.GetValue(1).ToString(),out groupId))
-                    //{
-                    //    bError = true;
-                    //}
-
-                    //tagName = reader.GetValue(2).ToString();
-                    //if (string.IsNullOrEmpty(tagName))
-                    //{
-                    //    bError = true;
-                    //}
-
-                    //address = reader.GetValue(3).ToString();
-                    //if (string.IsNullOrEmpty(address))
-                    //{
-                    //    bError = true;
-                    //}
-
-                    //if (!int.TryParse(reader.GetValue(4).ToString(),out dataType))
-                    //{
-                    //    bError = true;
-                    //}
-
-                    //if (!int.TryParse(reader.GetValue(5).ToString(),out dataSize))
-                    //{
-                    //    bError = true;
-                    //}
-
-                    //if (!int.TryParse(reader.GetValue(6).ToString(),out isActive))
-                    //{
-                    //    bError = true;
-                    //}
-                    //else
-                    //{
-                    //    if(isActive == 1)
-                    //    {
-                    //        bActive = true;
-                    //    }
-                    //    else
-                    //    {
-                    //        bActive = false;
-                    //    }
-                    //}
-
-                    //if (!int.TryParse(reader.GetValue(7).ToString(), out isArchive))
-                    //{
-                    //    bError = true;
-                    //}
-                    //else
-                    //{
-                    //    if (isArchive == 1)
-                    //    {
-                    //        bArchive = true;
-                    //    }
-                    //    else
-                    //    {
-                    //        bArchive = false;
-                    //    }
-                    //}
-
-                    //defaultVaule = reader.GetValue(8).ToString();
-                    //if (string.IsNullOrEmpty(defaultVaule))
-                    //{
-                    //    bError = true;
-                    //}
-                    
-
-                    TagData tag = new TagData((short)id ,(short)groupId, tagName, address, (byte)dataType,
-                        (ushort)dataSize, bActive, false, false, bArchive,
-                        reader.GetValue(8), reader.GetNullableString(9), reader.GetFloat(10), reader.GetFloat(11), reader.GetInt32(12));
+                    TagData tag = new TagData(reader.GetInt16(0), reader.GetInt16(1), reader.GetString(2), reader.GetString(3), reader.GetByte(4),
+                     (ushort)reader.GetInt16(5), reader.GetBoolean(6), false, false, reader.GetBoolean(7),
+                     reader.GetValue(8), reader.GetNullableString(9), reader.GetFloat(10), reader.GetFloat(11), reader.GetInt32(12));
                     list.Add(tag);
+                    data.Add(tag);
                 }
             }
 
             list.Sort();
-            bindSourceProtocol.DataSource = new SortableBindingList<TagData>(list);
+            bindSourceProtocol.DataSource = new SortableBindingList<TagData>(data);
             tagCount.Text = list.Count.ToString();
+        }
+
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            /*********为了让最后编辑的单元格数据可以保存到数据库中*****/
+            toolStripCollect.Focus();
+            dGVAccess.CurrentCell = null;
+            /*********************************************************/
+
+            if (Save())
+            {
+                MessageBox.Show("保存成功!");
+            }
+            else
+            {
+                MessageBox.Show("保存失败!");
+            }
+        }
+
+        private bool Save()
+        {
+            bool result = true;
+
+            TagDataReader reader = new TagDataReader(list);
+
+            result &= DataHelper.Instance.BulkCopy(reader, "Protocol", "DELETE FROM Protocol", SqlBulkCopyOptions.KeepIdentity);
+
+            return result;
+        }
+
+        private void BtnDelete_Click(object sender, EventArgs e)
+        {
+            TagData tag = bindSourceProtocol.Current as TagData;
+            bindSourceProtocol.Remove(tag);
+            list.Remove(tag);
+        }
+
+        private void BtnClear_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("将清除所有的标签，是否确定？", "警告", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                bindSourceProtocol.Clear();
+                list.Clear();
+            }
+        }
+
+        private void BtnQuit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (MessageBox.Show("退出之前是否需要保存？", "警告", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            {
+                Save();
+            }
         }
     }
 }
