@@ -10,6 +10,8 @@ using DatabaseLib;
 using Log;
 using DataService;
 using System.Data.SqlClient;
+using System.IO;
+
 
 namespace ProtocolConfig
 {
@@ -39,7 +41,6 @@ namespace ProtocolConfig
         {
             AddTag();
         }
-
 
         private void AddTag()
         {
@@ -90,7 +91,7 @@ namespace ProtocolConfig
 
             list.Sort();
             bindSourceProtocol.DataSource = new SortableBindingList<TagData>(data);
-            tagCount.Text = list.Count.ToString();
+            tagCount.Text += list.Count.ToString();
         }
 
         private void BtnSave_Click(object sender, EventArgs e)
@@ -147,6 +148,97 @@ namespace ProtocolConfig
             if (MessageBox.Show("退出之前是否需要保存？", "警告", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
                 Save();
+            }
+        }
+
+        private void LoadFromCsv()
+        {
+            if (Clipboard.ContainsText(TextDataFormat.Text))
+            {
+                List<TagData> dataList = new List<TagData>();
+                string data = Clipboard.GetText(TextDataFormat.Text);
+                if (string.IsNullOrEmpty(data)) return;
+                list.Clear();
+                using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(data)))
+                {
+                    using (var mysr = new StreamReader(stream))
+                    {
+                        string strline = "";
+                        while ((strline = mysr.ReadLine()) != null)
+                        {
+                            string[] aryline = strline.Split('\t');
+                            try
+                            {
+                                var id = Convert.ToInt16(aryline[0]);
+                                var groupid = Convert.ToInt16(aryline[1]);
+                                var name = aryline[2];
+                                var address = aryline[3];
+                                var type = Convert.ToByte(aryline[4]);
+                                var size = Convert.ToUInt16(aryline[5]);
+                                var active = Convert.ToBoolean(aryline[6]);
+                                var desp = aryline[7];
+                                TagData tag = new TagData(id, groupid, name, address, type, size, active, false, false, false, null, desp, 0, 0, 0);
+                                list.Add(tag);
+                                dataList.Add(tag);
+                            }
+                            catch (Exception err)
+                            {
+                                Log4Net.AddLog("LoadFromCsv() " + err.Message, InfoLevel.FATAL);
+                                continue;
+                            }
+                        }
+                    }
+                }
+                list.Sort();
+
+                bindSourceProtocol.DataSource = new SortableBindingList<TagData>(dataList);
+                tagCount.Text += dataList.Count.ToString();
+            }
+        }
+
+        private void BtnPasteTags_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.Filter = "xml文件 (*.xml)|*.xml|csv文件 (*.csv)|*.csv|All files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = 2;
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string file = saveFileDialog1.FileName;
+                switch (saveFileDialog1.FilterIndex)
+                {
+                    case 1:
+                        SaveToCsv(file);
+                        break;
+                    case 2:
+                        SaveToCsv(file);
+                        break;
+                }
+            }
+        }
+
+        private void SaveToCsv(string file)
+        {
+            using (StreamWriter objWriter = new StreamWriter(file, false))
+            {
+                foreach (TagData tag in list)
+                {
+                    objWriter.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8}", tag.ID, tag.GroupID, tag.Name, tag.Address, tag.DataType, tag.Size, tag.Active, tag.DefaultValue, tag.Description);
+                }
+            }
+        }
+
+        private void DGVAccess_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            SolidBrush b = new SolidBrush(this.dGVAccess.RowHeadersDefaultCellStyle.ForeColor);
+            e.Graphics.DrawString((e.RowIndex + 1).ToString(System.Globalization.CultureInfo.CurrentUICulture), this.dGVAccess.DefaultCellStyle.Font, b, e.RowBounds.Location.X + 20, e.RowBounds.Location.Y + 4);
+        }
+
+        private void ContextMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            switch (e.ClickedItem.Text)
+            {
+                case "粘贴CSV":
+                    LoadFromCsv();
+                    break;
             }
         }
     }
