@@ -17,7 +17,7 @@ namespace ProtocolConfig
         {
             DriverID = id;
             PropertyName = name;
-            PropertyValue = value;
+            PropertyValue = value; 
         }
     }
 
@@ -389,7 +389,7 @@ namespace ProtocolConfig
         {
             get
             {
-                return _id;
+                return _id; 
             }
             set
             {
