@@ -16,10 +16,10 @@ namespace DataService
         NONE = 0,
         BOOL = 1,
         BYTE = 3,
-        SHORT = 4,
-        WORD = 5,
-        DWORD = 6,
-        INT = 7,
+        SHORT = 4,//有符号16位
+        WORD = 5,//无符号16位
+        DWORD = 6,//无符号32位
+        INT = 7,//有符号32位
         FLOAT = 8,
         SYS = 9,
         STR = 11

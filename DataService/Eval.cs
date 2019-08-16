@@ -512,7 +512,10 @@ namespace DataService
                 Expression d = number.Pop();
                 return Expression.Lambda(d);
             }
-            catch (Exception e) { return null; }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         MethodInfo _boolinfo = typeof(ExpressionEval).GetMethod("GetBool");

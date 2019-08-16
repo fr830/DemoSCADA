@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -17,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace ControlLibrary
 {
@@ -132,12 +134,16 @@ namespace ControlLibrary
             }
         }
 
+        /// <summary>
+        /// 是否需要改 BeginInvoke 为 相关控件IsInvoke
+        /// </summary>
+        /// <param name="dt"></param>
         private void DisPlayDataAsync(DataForm dt)
         {
-           
-            this.Dispatcher.BeginInvoke(new Action(() =>{
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+            {
                 string strProtocol = cmbProtocolType.Text;
-                if (string.Equals(strProtocol,"Ping"))
+                if (string.Equals(strProtocol, "Ping"))
                 {
                     rcvSendData.Add(new DataForm { Buffer = dt.Buffer, Length = dt.Length, IPPort = "[" + dt.DTime + "] " + dt.IPPort, DTime = dt.DTime, IsRS = dt.IsRS });
                 }
@@ -212,6 +218,12 @@ namespace ControlLibrary
             cmbIpAddress.ItemsSource = ipList;
             cmbIpAddress.SelectedIndex = 0;
             cmbRemoteHost.ItemsSource = remoteIPList;
+        }
+
+        private void OtherAssist_Click(object sender, RoutedEventArgs e)
+        {
+            string appName = System.Environment.CurrentDirectory + @"\NetAssist.exe";
+            Process.Start(appName);
         }
     }
 

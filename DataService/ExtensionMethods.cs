@@ -185,6 +185,13 @@ namespace DataService
             return rev;
         }
 
+        /// <summary>
+        /// 仅仅是为了更新 PDU 的大小
+        /// </summary>
+        /// <param name="cacheReader"></param>
+        /// <param name="PDU"></param>
+        /// <param name="addrsArr"></param>
+        /// <returns></returns>
         public static List<PDUArea> AssignFromPDU(this ICache cacheReader, int PDU, params DeviceAddress[] addrsArr)
         {
             List<PDUArea> rangeList = new List<PDUArea>();
@@ -248,12 +255,12 @@ namespace DataService
             return rangeList;
         }
 
-        //调用前应对地址数组排序(是否加锁？)
+        //调用前应对地址数组排序(是否加锁？),先一整块PDU读取到 缓存中，然后再逐个从缓存中 读取到各变量地址中
         public static ItemData<Storage>[] PLCReadMultiple(this IPLCDriver plc, ICache cache, DeviceAddress[] addrsArr)
         {
             if (addrsArr == null || cache == null || addrsArr.Length == 0) return null;
-            int len = addrsArr.Length;
-            ItemData<Storage>[] items = new ItemData<Storage>[len];
+            int len = addrsArr.Length;//读取的 变量地址的个数
+            ItemData<Storage>[] items = new ItemData<Storage>[len];//需要填充的列表
             int offset = 0; long now = DateTime.Now.ToFileTime();
             List<PDUArea> areas = cache.AssignFromPDU(plc.PDU, addrsArr);
             foreach (PDUArea area in areas)
@@ -430,7 +437,7 @@ namespace DataService
             return (bit < 8 ? bit + 8 : bit - 8);
         }
 
-        [Obsolete]
+        //[Obsolete]
         public static Storage ToStorage(this ITag tag, object obj)
         {
             Storage value = Storage.Empty;
@@ -837,8 +844,16 @@ namespace DataService
             //西门子300、400
             if (bytes == null || bytes.Length == 0)
                 return string.Empty;
-            var klen = bytes[start + 1];
+            var klen = bytes[start + 1];//第二个字节代表长度
             return Encoding.ASCII.GetString(bytes, start + 2, klen).Trim((char)0);
+        }
+
+        public static string ConvertToStringEx(byte[] bytes)
+        {
+            if (bytes == null || bytes.Length == 0)
+                return string.Empty;
+
+            return Encoding.ASCII.GetString(bytes).Trim((char)0);
         }
 
         public static ushort ReverseInt16(short value)

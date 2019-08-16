@@ -1,8 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace DataService
 {
-    public abstract class ITag : IComparable<ITag>
+    public abstract class ITag : IComparable<ITag>, INotifyPropertyChanged
     {
         protected short _id;
         public short ID
@@ -39,12 +40,21 @@ namespace DataService
         /// <summary>
         /// 这是存储在内存中的值
         /// </summary>
-        protected Storage _value;
+        protected Storage _value;// ??加入
         public Storage Value
         {
             get
             {
                 return _value;
+            }
+
+            set
+            {
+                _value = value;
+                if (PropertyChanged != null)
+                {
+                    this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs("Value"));
+                }
             }
         }
 
@@ -152,6 +162,8 @@ namespace DataService
         public ValueChangingEventHandler<Storage> ValueChanging;
 
         public ValueChangedEventHandler ValueChanged;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         #region IComparable<PLCAddress> Members
 

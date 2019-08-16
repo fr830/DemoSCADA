@@ -312,6 +312,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="70" />
+                            <ColumnDefinition Width="70" />
                         </Grid.ColumnDefinitions>
                     </Grid>
                 </ItemsPanelTemplate>
@@ -334,6 +335,9 @@
             <Separator Grid.Column="7" />
             <StatusBarItem Grid.Column="8">
                 <Button x:Name="clcCnt" Content="复位计数" HorizontalAlignment="Left" VerticalAlignment="Top" Width="60" Height="26" IsDefault="False" Template="{StaticResource NormalButtonTemplate}"/>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="9">
+                <Button x:Name="otherAssist" Content="其他工具" Click="OtherAssist_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Width="60" Height="26" IsDefault="False" Template="{StaticResource NormalButtonTemplate}"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>

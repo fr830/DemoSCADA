@@ -780,6 +780,7 @@ namespace DataService
 
         protected override void Poll()
         {
+            if (_plcReader.IsClosed) return;//如果连接断开，返回不操作
             if (_items == null || _items.Count == 0) return;
             byte[] cache = (byte[])_cacheReader.Cache;
             int offset = 0;

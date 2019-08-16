@@ -60,6 +60,13 @@ namespace DatabaseLib
             }
         }
 
+        /// <summary>
+        /// 获取数据库中 归档数据的 时间范围
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
         public static bool GetRangeFromDatabase(short? ID, ref DateTime start, ref DateTime end)
         {
             using (var reader = DataHelper.Instance.ExecuteReader("SELECT MIN(TIMESTAMP),MAX(TIMESTAMP) FROM LOG_HDATA" + (ID.HasValue ? " WHERE ID=" + ID.Value : "")))

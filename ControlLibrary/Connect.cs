@@ -14,18 +14,28 @@ namespace ControlLibrary
 {
     public delegate void  GetRcvBuffer(DataForm dt);
 
-   interface IConnect
+    public interface IConnect
     {
         string LocalIPAddress{ get;set;}
         int LocalPort{get;set;}
         string RemoteIPAddress{get;set;}
         int RemotePort{get;set;}
-        event GetRcvBuffer GetRcvBufferEvent;
+        bool IsClosed { get; }
+        bool HaveHeartBeat { get; set; }
+        int RcvByteCnt { get; set; }
+        int RcvByteSumCnt { get; set; }
+        int SendByteCnt { get; set; }
+        int SendByteSumCnt { get; set; }
 
         bool OpenConnect();
         void CloseConnect();
         void RcvData();
         void SendData(byte[] buffer);
+        int Readbytes(int index,int len, byte[] retBuffer);
+        int Readbits(int index, int bitOrder, out bool bRet);
+        void ClearStatistics();
+
+        event GetRcvBuffer GetRcvBufferEvent;
     }
 
     public class PingTest : IConnect
@@ -53,6 +63,12 @@ namespace ControlLibrary
         public int LocalPort { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public string RemoteIPAddress { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public int RemotePort { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool IsClosed => throw new NotImplementedException();
+        public int RcvByteCnt { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int SendByteCnt { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int RcvByteSumCnt { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int SendByteSumCnt { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool HaveHeartBeat { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public event GetRcvBuffer GetRcvBufferEvent;
 
@@ -119,6 +135,21 @@ namespace ControlLibrary
             throw new NotImplementedException();
         }
 
+        public int Readbytes(int index, int len, byte[] retBuffer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Readbits(int index, int bitOrder, out bool bRet)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ClearStatistics()
+        {
+            throw new NotImplementedException();
+        }
+
         public PingTest(string localIP)
         {
             LocalIPAddress = localIP;
@@ -128,10 +159,13 @@ namespace ControlLibrary
     public class UDPConnect : IConnect
     {
 
-        private Socket sckConnect;
+        internal Socket udpSend;//用来发送
+        internal Socket udpRecive;//用来接收  分开来处理业务逻辑
+
+        private bool bUseAsPro = false;
         private EndPoint toPoint;
         private EndPoint fromPoint = new IPEndPoint(IPAddress.Any, 0);
-        private byte[] rcvBuffer = new byte[1024];
+        private byte[] rcvBuffer;
         Thread tRcv;
         public event GetRcvBuffer GetRcvBufferEvent;
         private string _localIPAddress = "127.0.0.1";
@@ -204,23 +238,95 @@ namespace ControlLibrary
             }
         }
 
+        public bool IsClosed
+        {
+            get
+            {
+                return udpSend == null || udpRecive == null || !udpSend.Connected || !udpRecive.Connected;
+            }
+        }
+
+        int _rcvByteCnt = 0;
+        public int RcvByteCnt
+        {
+            get { return _rcvByteCnt; }
+            set { _rcvByteCnt = value; }
+        }
+
+        int _sendByteCnt = 0;
+        public int SendByteCnt
+        {
+            get { return _sendByteCnt; }
+            set { _sendByteCnt = value; }
+        }
+
+        int _rcvByteSumCnt = 0;
+        public int RcvByteSumCnt
+        {
+            get { return _rcvByteSumCnt; }
+            set { _rcvByteSumCnt = value; }
+        }
+
+        int _sendByteSumCnt = 0;
+        public int SendByteSumCnt
+        {
+            get { return _sendByteSumCnt; }
+            set { _sendByteSumCnt = value; }
+        }
+
+        private System.Timers.Timer _timerCheckHeartBeat = new System.Timers.Timer();
+        bool _haveHeartBeat = false;
+        DateTime _rcvTime = DateTime.Now;
+        public bool HaveHeartBeat
+        {
+            get { return _haveHeartBeat; }
+            set { _haveHeartBeat = value; }
+        }
+
         public bool IPCheck(string IP)
         {
             return Regex.IsMatch(IP.Trim(), @"^(\d{1,3}.){3}(\d{1,3})$");
         }
 
-        public UDPConnect(string localIP,int localPort,string remoteIP,int remotePort)
+        public UDPConnect(string localIP,int localPort,string remoteIP,int remotePort,bool _bUseAsPro = false)
         {
             LocalIPAddress = localIP;
             LocalPort = localPort;
             RemoteIPAddress = remoteIP;
             RemotePort = remotePort;
+            bUseAsPro = _bUseAsPro;
+
+            _timerCheckHeartBeat.Elapsed += _timerCheckHeartBeat_Elapsed;
+            _timerCheckHeartBeat.Interval = 500;//500ms检测一次是否有接收到数据更新
+            _timerCheckHeartBeat.Enabled = true;
+            _timerCheckHeartBeat.Start();
         }
 
-        public UDPConnect(string localIP, int localPort)
+        private void _timerCheckHeartBeat_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            TimeSpan diff = DateTime.Now - _rcvTime;
+
+            if (diff.Milliseconds > 1000)
+            {
+                HaveHeartBeat = false;
+            }
+            else
+            {
+                HaveHeartBeat = true;
+            }
+        }
+
+        public UDPConnect(string localIP, int localPort, bool _bUseAsPro = false)
         {
             LocalIPAddress = localIP;
             LocalPort = localPort;
+            bUseAsPro = _bUseAsPro;
+
+
+            _timerCheckHeartBeat.Elapsed += _timerCheckHeartBeat_Elapsed;
+            _timerCheckHeartBeat.Interval = 1000;//一秒钟检测一次是否有接收到数据更新
+            _timerCheckHeartBeat.Enabled = true;
+            _timerCheckHeartBeat.Start();
         }
 
         public void CloseConnect()
@@ -231,44 +337,98 @@ namespace ControlLibrary
                 tRcv = null;
             }
 
-            if(sckConnect != null)
+            if (udpRecive != null)
             {
-                sckConnect.Close();
-                sckConnect = null;
+                udpRecive.Close();
+                udpRecive = null;
+            }
+
+            if (udpSend != null)
+            {
+                udpSend.Close();
+                udpSend = null;
             }
         }
 
         public bool OpenConnect()
         {
-            try
+            lock (this)
             {
-                sckConnect = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                sckConnect.Bind(new IPEndPoint(IPAddress.Parse(LocalIPAddress), LocalPort));
-                tRcv = new Thread(RcvData) { Name="Thread_Rcv",IsBackground=true};
-                tRcv.Start();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
+                try
+                {
+                    if (udpRecive != null)
+                    {
+                        udpRecive.Dispose();
+                    }
 
-                return false;
+                    if (udpSend != null)
+                    {
+                        udpSend.Dispose();
+                    }
+
+                    udpRecive = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                    udpRecive.Bind(new IPEndPoint(IPAddress.Parse(LocalIPAddress), LocalPort));
+
+                    if (rcvBuffer == null)
+                    {
+                        rcvBuffer = new byte[udpRecive.ReceiveBufferSize];
+                    }
+
+                    udpSend = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+
+                    tRcv = new Thread(RcvData) { Name = "Thread_Rcv", IsBackground = true };
+                    tRcv.Priority = ThreadPriority.Highest;
+                    tRcv.Start();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+
+                    return false;
+                }
+
+                return true;
             }
 
-            return true;
         }
 
         public void RcvData()
         {
-            while (true)
-            {
-                int length = sckConnect.ReceiveFrom(rcvBuffer, ref fromPoint);
+            if (udpRecive == null) return;
 
-                if((GetRcvBufferEvent != null) && (length > 0))
+            int length = 0;
+            byte[] rcvBufferTemp = new byte[udpRecive.ReceiveBufferSize];
+
+            while (true)
+            {  
+                length = udpRecive.ReceiveFrom(rcvBuffer, ref fromPoint);
+
+                if (length > 0)
                 {
-                    dt.SetValue(false, Encoding.UTF8.GetString(rcvBuffer, 0, length), fromPoint.ToString(), length);
-                    GetRcvBufferEvent(dt);
+                    _rcvTime = DateTime.Now;
+                    RcvByteCnt = length;
+                    RcvByteSumCnt += length;
+
+                    if (bUseAsPro)
+                    {
+                        //加入对收到的字节序列  头、校验和、帧尾的判读，并计数 正确的帧数 和校验和失败的 帧数
+                        if (true)
+                        {
+                            Array.Copy(rcvBufferTemp, rcvBuffer, length);
+                        }
+                    }
+                    else
+                    {
+                        Array.Copy(rcvBufferTemp, rcvBuffer, length);
+                    }
+
+                    if ((GetRcvBufferEvent != null) && (length > 0))
+                    {
+                        dt.SetValue(false, Encoding.UTF8.GetString(rcvBuffer, 0, length), fromPoint.ToString(), length);
+                        GetRcvBufferEvent(dt);
+                    }
                 }
-            }
+            };
         }
 
         public void SendData(byte[] buffer)
@@ -283,17 +443,72 @@ namespace ControlLibrary
                 {
                     MessageBox.Show(e.Message);
                 }
-              
             }
 
             try
             {
-                sckConnect.SendTo(buffer, toPoint);
+                udpSend.SendTo(buffer, toPoint);
+                SendByteCnt = buffer.Length;
+                SendByteSumCnt += buffer.Length;
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }
+        }
+
+        public int Readbytes(int index, int len, byte[] retBuffer)
+        {
+            if (IsClosed)
+            {
+                return -1;
+            }
+
+            if ((index > (rcvBuffer.Length -1)) || (index + len > rcvBuffer.Length - 1))
+            {
+                return -2;
+            }
+
+            Array.Copy(rcvBuffer, index, retBuffer, 0, len);
+
+            return 0;
+
+        }
+
+        public int Readbits(int index, int bitCnt, out bool bRet)
+        {
+            if (IsClosed)
+            {
+                bRet = false;
+                return -1;
+            }
+
+            if (index > (rcvBuffer.Length - 1))
+            {
+                bRet = false;
+                return -2;
+            }
+
+            byte bTemp = rcvBuffer[index];
+
+            if ((bTemp & (1<< bitCnt)) > 0)
+            {
+                bRet = true;
+            }
+            else
+            {
+                bRet = false;
+            }
+
+            return 0;
+        }
+
+        public void ClearStatistics()
+        {
+            RcvByteCnt = 0;
+            SendByteCnt = 0;
+            SendByteSumCnt = 0;
+            RcvByteSumCnt = 0;
         }
     }
 }
