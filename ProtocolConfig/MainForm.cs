@@ -75,7 +75,7 @@ namespace ProtocolConfig
         {
             List<TagData> data = new List<TagData>();
             list.Clear();
-            string sql = "SELECT Id,GroupID,TagName,Address,DataType,DataSize,IsActive,Archive,DefaultValue,Description,Maximum,Minimum,Cycle from Protocol where DataType<12";
+            string sql = "SELECT TagId,GroupID,TagName,Address,DataType,DataSize,IsActive,Archive,DefaultValue,Description,Maximum,Minimum,Cycle from Protocol where DataType<12";
 
             using (var reader = DataHelper.Instance.ExecuteReader(sql))
             {                

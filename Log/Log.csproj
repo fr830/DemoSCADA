@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Log4Net.cs" />
+    <Compile Include="LogBytes.cs" />
+    <Compile Include="LogParsed.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

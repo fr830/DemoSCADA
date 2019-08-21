@@ -5,19 +5,39 @@ using System.Text;
 using System.Timers;
 using DataService;
 using ControlLibrary;
+using System.Net;
+using System.Net.Sockets;
+using DatabaseLib;
 
 namespace DemoDriver
 {
     [Description("二层台机械手UDP协议")]
     public sealed class SecondFloorPLCDriver : IPLCDriver, IMultiReadWrite
     {
-
-        IConnect con = new UDPConnect("127.0.0.1",8080,"127.0.0.1",8081,true);
+        IConnect con = new UDPConnect(GetLocalIP(), 8080, DataHelper.RemoteIP, DataHelper.RemotePort,true);
         int _rack;
         int _slot;
         string _IP;
         object _async = new object();
         DateTime _closeTime = DateTime.Now;
+
+        static string GetLocalIP()
+        {
+            string hostName = Dns.GetHostName();
+            string localIPAddress = "";
+            System.Net.IPAddress[] addressList = Dns.GetHostAddresses(hostName);
+
+            foreach (IPAddress ip in addressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    localIPAddress = ip.ToString();
+                    break;
+                }
+            }
+
+            return localIPAddress;
+        }
 
         public int Limit
         {
@@ -153,23 +173,23 @@ namespace DemoDriver
                 case DataType.NONE:
                     return addr;
                 case DataType.BOOL:
-                    return string.Concat(addr, address.Start, ".", address.Bit);
+                    return string.Concat(addr, address.Start, ".", address.Bit);//开关型
                 case DataType.BYTE:
-                    return string.Concat(addr, "B", address.Start);
+                    return string.Concat(addr, "B", address.Start);//字节型
                 case DataType.SHORT:
-                    return string.Concat(addr, "H", address.Start);//变量类型对应表
+                    return string.Concat(addr, "H", address.Start);//短整型
                 case DataType.WORD:
-                    return string.Concat(addr, "W", address.Start);
+                    return string.Concat(addr, "W", address.Start);//单字型
                 case DataType.DWORD:
-                    return string.Concat(addr, "D", address.Start);
+                    return string.Concat(addr, "D", address.Start);//双子型
                 case DataType.INT:
-                    return string.Concat(addr, "I", address.Start);
+                    return string.Concat(addr, "I", address.Start);//长整型
                 case DataType.FLOAT:
-                    return string.Concat(addr, "F", address.Start);
+                    return string.Concat(addr, "F", address.Start);//浮点型
                 case DataType.SYS:
-                    return string.Concat(addr, "C", address.Start);//Computer 等同于 SYS
+                    return string.Concat(addr, "C", address.Start);//系统型
                 case DataType.STR:
-                    return string.Concat(addr, "S", address.Start);
+                    return string.Concat(addr, "S", address.Start);//ASCII 字符串
                 default:
                     return addr;
             }
@@ -189,7 +209,7 @@ namespace DemoDriver
             {
                 int start = int.Parse(address.Substring(0, index));
                 byte bit = byte.Parse(address.RightFrom(index));
-                plcAddr.Start = bit > 8 ? start : start + 1;
+                plcAddr.Start = bit > 8 ? start+1: start;
                 plcAddr.Bit = (byte)(bit > 7 ? bit - 8 : bit);
             }
             else
@@ -205,9 +225,9 @@ namespace DemoDriver
             lock (_async)
             {
                 if (!_closed) return true;
-                double sec = (DateTime.Now - _closeTime).TotalMilliseconds;
-                if (sec < 6000)
-                    System.Threading.Thread.Sleep(6000 - (int)sec);
+                //double sec = (DateTime.Now - _closeTime).TotalMilliseconds;
+                //if (sec < 6000)
+                //    System.Threading.Thread.Sleep(6000 - (int)sec);
 
                 if (con.IsClosed)
                 {
@@ -569,6 +589,17 @@ namespace DemoDriver
         int WriteMultipleInternal(DeviceAddress[] addrArr, object[] buffer)
         {
             throw new NotImplementedException();
+        }
+
+        public bool SendBytes(byte[] bytes)
+        {
+            if (con != null && !con.IsClosed)
+            {
+                con.SendData(bytes);
+                return true;
+            }
+
+            return false;
         }
 
         public event IOErrorEventHandler OnError;

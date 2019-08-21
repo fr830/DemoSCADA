@@ -16,10 +16,12 @@ namespace DatabaseLib
         static string m_DataPath = System.Environment.CurrentDirectory + @"\Data\Data.accdb";
         static string m_ConnStr = @"Provider= Microsoft.Ace.OLEDB.12.0;Data Source = " + m_DataPath;
         static string m_Path = System.Environment.CurrentDirectory + @"\HisData\";
-        static string m_host = Environment.MachineName;
+
+        static string m_RemoteIP = "127.0.0.1";
+        static string m_RemotePort = "8081";
         static string m_type = "ACCESS";
-        static string m_SaveBytes = "FALSE";
-        static string m_HaveVedio = "FALSE";
+        static string m_SaveBytes = "1";
+        static string m_HaveVedio = "0";
         //数据库工厂接口  
 
         static string INIPATH = System.Environment.CurrentDirectory + @"\Config.ini";
@@ -36,9 +38,54 @@ namespace DatabaseLib
             }
         }
 
-        public static string HostName
+        public static bool IsSaveBytes
         {
-            get { return m_host; }
+            get
+            {
+                int iTemp;
+                if (int.TryParse(m_SaveBytes,out iTemp))
+                {
+                    if (iTemp == 1)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        public static bool HaveVedio
+        {
+            get
+            {
+                int iTemp;
+                if (int.TryParse(m_HaveVedio, out iTemp))
+                {
+                    if (iTemp == 1)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        public static string RemoteIP
+        {
+            get { return m_RemoteIP; }
+        }
+
+        public static int RemotePort
+        {
+            get
+            {
+                int iPort;
+                if (int.TryParse(m_RemotePort, out iPort))
+                {
+                    return iPort;
+                }
+                return 8081;
+             }
         }
 
         public static string ConnectString
@@ -67,8 +114,13 @@ namespace DatabaseLib
                 if (File.Exists(INIPATH))
                 {
                     StringBuilder sb = new StringBuilder(STRINGMAX);
-                    WinAPI.GetPrivateProfileString("HOST", "SERVER", m_host, sb, STRINGMAX, INIPATH);
-                    m_host = sb.ToString();
+
+                    WinAPI.GetPrivateProfileString("HOST", "REMOTEIP", m_RemoteIP, sb, STRINGMAX, INIPATH);
+                    m_RemoteIP = sb.ToString();
+
+                    WinAPI.GetPrivateProfileString("HOST", "REMOTEPORT", m_RemotePort, sb, STRINGMAX, INIPATH);
+                    m_RemotePort = sb.ToString();
+
                     WinAPI.GetPrivateProfileString("DATABASE", "ARCHIVE", m_Path, sb, STRINGMAX, INIPATH);
                     m_Path = sb.ToString();
                     WinAPI.GetPrivateProfileString("DATABASE", "TYPE", m_type, sb, STRINGMAX, INIPATH);
@@ -87,11 +139,6 @@ namespace DatabaseLib
                     }
                 }
 
-                IPAddress addr;
-                if (string.IsNullOrEmpty(m_host) || !IPAddress.TryParse(m_host, out addr))
-                {
-                    m_host = Environment.MachineName;
-                }
                 switch (m_type.ToUpper())
                 {
                     case "MSSQL":
@@ -212,21 +259,6 @@ namespace DatabaseLib
                 num3 = 0;
             return num3;
         }
-
-        //public static object GetSqlValue(this DbDataReader reader, int index)
-        //{
-        //    SqlDataReader dataReader = reader as SqlDataReader;
-        //    if (dataReader != null)
-        //    {
-        //        return dataReader.GetSqlValue(index);
-        //    }
-        //    var mq = reader as MySqlDataReader;
-        //    if (mq != null)
-        //    {
-        //        return mq.GetValue(index);
-        //    }
-        //    return "";
-        //}
     }
 
 

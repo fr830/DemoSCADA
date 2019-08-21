@@ -47,7 +47,6 @@ namespace DemoDriver
         int ARCHIVEINTERVAL = 100;//归档周期最快为 100ms
 
         private System.Timers.Timer timer1 = new System.Timers.Timer();
-        private System.Timers.Timer timer2 = new System.Timers.Timer();
         private System.Timers.Timer timer3 = new System.Timers.Timer();
         private DateTime _hdastart = DateTime.Now;//要归档数据的 开始时间
 
@@ -142,7 +141,22 @@ namespace DemoDriver
 
         public IEnumerable<IDriver> Drivers => throw new NotImplementedException();
 
-        public object SyncRoot => throw new NotImplementedException();
+        object _syncRoot;
+        public object SyncRoot
+        {
+            get
+            {
+                if (this._syncRoot == null)
+                {
+                    /*
+                     * 比较第一个参数和最后一个参数是否相等，相等则用第二个参数替换第一个，并返回第一个参数的最新值。
+                     * 这是在多线程中，防止 if 进去之后，_synRoot值被其他线程置为非null，所以用 Interlocked.CompareExchange
+                     */
+                    Interlocked.CompareExchange(ref this._syncRoot, new object(), null);
+                }
+                return this._syncRoot;
+            }
+        }
 
         public DAService()
         {
@@ -156,18 +170,15 @@ namespace DemoDriver
             InitConnection();//创建驱动实例，并尝试建立连接
 
             timer1.Elapsed += timer1_Elapsed;
-            timer2.Elapsed += timer2_Elapsed;
             timer3.Elapsed += timer3_Elapsed;
             timer1.Interval = CYCLE;
             timer1.Enabled = true;
             timer1.Start();
-            timer2.Interval = CYCLE2;
-            timer2.Enabled = true;
-            timer2.Start();
             if (_hasHda)
             {
                 foreach (var item in _archiveTimes.Values)
                 {
+                    //只要有数据不为
                     if (item != null)
                     {
                         timer3.Interval = ARCHIVEINTERVAL;//100ms
@@ -179,6 +190,11 @@ namespace DemoDriver
             }
         }
 
+        public void SendBytes(byte[] bytes)
+        {
+            _driver.SendBytes(bytes);
+        }
+
         public void Dispose()
         {
             lock (this)
@@ -187,8 +203,8 @@ namespace DemoDriver
                 {
                     if (timer1 != null)
                         timer1.Dispose();
-                    if (timer2 != null)
-                        timer2.Dispose();
+                    //if (timer2 != null)
+                    //    timer2.Dispose();
                     if (timer3 != null)
                         timer3.Dispose();
                     if (_driver != null)
@@ -233,60 +249,6 @@ namespace DemoDriver
         }
 
         /// <summary>
-        /// 每10分钟执行一次，看一些数据库中是否有今天以前的数据，若果有，则按天写入到文件中
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void timer2_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            //需要归档且有归档数据  同时当前时间 减去 上次归档时间 已经大于延迟间隔 1 个小时，防止有过长时间的未归档数据
-            if (HDADELAY > 0 && _hda.Count > 0 && (DateTime.Now - _hdastart).TotalMilliseconds > HDADELAY)
-            {
-                lock (_hdaRoot)
-                {
-                    ThreadPool.UnsafeQueueUserWorkItem(new WaitCallback(this.SaveCachedData), _hda.ToArray());
-                    _hda.Clear();
-                }
-            }
-
-            DateTime today = DateTime.Today;
-            try
-            {
-                if (e.SignalTime > today.AddHours(2))
-                {
-                    DateTime startTime = DateTime.MinValue;
-                    DateTime endTime = DateTime.MaxValue;
-                    HDAIOHelper.GetRangeFromDatabase(null, ref startTime, ref endTime);//获取单个变量在数据库中的  起始时间 和 结束时间// 或是 所有变量 的 起始时间和结束时间
-                    if (startTime >= today || startTime == DateTime.MinValue)//这意思是代表数据库里面的数据都是今天的，没有需要写入文件的数据
-                    {
-                        return;
-                    }
-                    bool success = true;
-                    if (endTime < today && _hda.Count > 0 && _hda[0].TimeStamp < today)//这里代表数据库中激烈的最大时间  是少于今天的，同时 缓存归档列表中有数据，最小的时间记录是昨天的
-                    {
-                        success = SaveRange(endTime, today);//这里存储的还是把缓存中属于昨天的数据存储到数据库中，方便接下来存储到文件中
-                    }
-                    if (success)
-                    {
-                        startTime = startTime.Date.AddDays(1);
-                        endTime = endTime.Date.AddDays(1);
-                        if (endTime >= today) endTime = today;
-                        while (startTime <= endTime)
-                        {
-                            //这里是每次把一天的数据写入到文件中
-                            HDAIOHelper.BackUpFile(startTime);
-                            startTime = startTime.AddDays(1);
-                        }
-                    }
-                }
-            }
-            catch (Exception err)
-            {
-                AddErrorLog(err);
-            }
-        }
-
-        /// <summary>
         /// 100ms周期性执行,用来把内存中的数据归档到数据库中，1次10000条记录
         /// </summary>
         /// <param name="sender"></param>
@@ -297,7 +259,7 @@ namespace DemoDriver
             List<HistoryData> tempData = new List<HistoryData>();
             foreach (var archive in _archiveTimes)
             {
-                var archiveTime = archive.Value;//归档列表里面 一个 id,一个归档的时间 ArchiveTime    public int Cycle; public DateTime LastTime;
+                var archiveTime = archive.Value;//归档列表里面 一个 id,一个归档的时间 ArchiveTime 两个属性；   public int Cycle; public DateTime LastTime;
                 if (archiveTime != null && (now - archiveTime.LastTime).TotalMilliseconds > archiveTime.Cycle)//当前时间 减去上次更新时间 已经大于 更新周期时间 Cycle 
                 {
                     var tag = this[archive.Key];//取出当前 Itag,并且当前内存中的 Itag值 的时间已经更新了，于是加入归档列表，说明数据有更新
@@ -337,7 +299,7 @@ namespace DemoDriver
 
         void InitServerByDatabase()
         {
-            using (var dataReader = DataHelper.Instance.ExecuteProcedureReader("InitServer"/*, DataHelper.CreateParam("@TYPE", SqlDbType.Int, 0)*/))
+            using (var dataReader = DataHelper.Instance.ExecuteProcedureReader("InitServer"))
             {
                 if (dataReader == null) return;// Stopwatch sw = Stopwatch.StartNew();
 
@@ -609,7 +571,7 @@ namespace DemoDriver
         }
 
         /// <summary>
-        /// 整个函数还是在归档，把缓存中的未归档数据写入到数据库中
+        /// 整个函数是在归档，把缓存中时间范围内的未归档数据写入到数据库中。
         /// </summary>
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
@@ -661,8 +623,8 @@ namespace DemoDriver
             while (true)
             {
                 if (count >= 5) return;//多次写入，防止写失败
-                if (DataHelper.Instance.BulkCopy(new HDASqlReader(tempData, this), "Log_HData",
-                   string.Format("DELETE FROM Log_HData WHERE [TIMESTAMP] BETWEEN '{0}' AND '{1}'",
+                if (DataHelper.Instance.BulkCopy(new HDASqlReader(tempData, this), "Log",
+                   string.Format("DELETE FROM Log WHERE [TIMESTAMP] BETWEEN '{0}' AND '{1}'",
                     startTime.ToString("yyyy/MM/dd HH:mm:ss"), endTime.ToString("yyyy/MM/dd HH:mm:ss"))))
                 {
                     stateInfo = null;
@@ -695,20 +657,6 @@ namespace DemoDriver
             }
         }
         #endregion
-
-        /// <summary>
-        /// 调用存储过程，传入参数， 添加事件日志
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnValueChanged(object sender, ValueChangedEventArgs e)
-        {
-            var tag = sender as ITag;
-            DataHelper.Instance.ExecuteStoredProcedure("AddEventLog",
-                DataHelper.CreateParam("@StartTime", SqlDbType.DateTime, tag.TimeStamp),
-                DataHelper.CreateParam("@Source", SqlDbType.NVarChar, tag.ID.ToString(), 50),
-                DataHelper.CreateParam("@Comment", SqlDbType.NVarChar, tag.ToString(), 50));
-        }
 
         /// <summary>
         /// 调用所属group中的批量读取函数 BatchRead

@@ -21,6 +21,7 @@ namespace DataService
                 _isActive = value;
                 if (value)
                 {
+                    //这里设置组的更新周期
                     if (_updateRate <= 0) _updateRate = 100;
                     _timer.Interval = _updateRate;
                     _timer.Elapsed += new ElapsedEventHandler(timer_Timer);
@@ -434,6 +435,7 @@ namespace DataService
                         i++;
                     }
                 }
+
                 foreach (DataChangeEventHandler deleg in DataChange.GetInvocationList())//批量调用绑定在事件上面的委托
                 {
                     deleg.BeginInvoke(this, new DataChangeEventArgs(1, values), null, null);

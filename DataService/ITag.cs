@@ -40,7 +40,7 @@ namespace DataService
         /// <summary>
         /// 这是存储在内存中的值
         /// </summary>
-        protected Storage _value;// ??加入
+        protected Storage _value;
         public Storage Value
         {
             get

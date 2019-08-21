@@ -63,6 +63,7 @@ namespace DataService
         IEnumerable<IGroup> Groups { get; }//包含的所有组别
         IDataServer Parent { get; }
         bool Connect();
+        bool SendBytes(byte[] bytes);
         IGroup AddGroup(string name, short id, int updateRate, float deadBand = 0f, bool active = false);
         bool RemoveGroup(IGroup group);
         event IOErrorEventHandler OnError;//IO 错误事件处理
@@ -73,6 +74,7 @@ namespace DataService
         int PDU { get; }
         DeviceAddress GetDeviceAddress(string address);
         string GetAddress(DeviceAddress address);
+        
     }
 
     public interface IFileDriver : IDriver, IReaderWriter

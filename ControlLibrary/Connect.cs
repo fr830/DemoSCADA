@@ -9,6 +9,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using DatabaseLib;
+using Log;
 
 namespace ControlLibrary
 {
@@ -242,7 +244,7 @@ namespace ControlLibrary
         {
             get
             {
-                return udpSend == null || udpRecive == null || !udpSend.Connected || !udpRecive.Connected;
+                return udpSend == null || udpRecive == null/* || !udpSend.Connected || !udpRecive.Connected*/;
             }
         }
 
@@ -401,13 +403,19 @@ namespace ControlLibrary
 
             while (true)
             {  
-                length = udpRecive.ReceiveFrom(rcvBuffer, ref fromPoint);
+                length = udpRecive.ReceiveFrom(rcvBufferTemp, ref fromPoint);
 
                 if (length > 0)
                 {
                     _rcvTime = DateTime.Now;
                     RcvByteCnt = length;
                     RcvByteSumCnt += length;
+
+
+                    if (DataHelper.IsSaveBytes)
+                    {
+                        Log.LogBytes.WriteBytesToFile(rcvBufferTemp,length);
+                    }
 
                     if (bUseAsPro)
                     {
@@ -447,9 +455,10 @@ namespace ControlLibrary
 
             try
             {
-                udpSend.SendTo(buffer, toPoint);
-                SendByteCnt = buffer.Length;
-                SendByteSumCnt += buffer.Length;
+
+                int iSend = udpSend.SendTo(buffer, toPoint);//返回实际发送的字节数
+                SendByteCnt = iSend;
+                SendByteSumCnt += iSend;
             }
             catch (Exception e)
             {

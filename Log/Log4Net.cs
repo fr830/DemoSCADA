@@ -22,7 +22,6 @@ namespace Log
         static Log4Net()
         {
             _log = LogManager.GetLogger("log");
-
         } 
 
         public static ILog Instance

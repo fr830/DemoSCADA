@@ -69,7 +69,7 @@ namespace DatabaseLib
         /// <returns></returns>
         public static bool GetRangeFromDatabase(short? ID, ref DateTime start, ref DateTime end)
         {
-            using (var reader = DataHelper.Instance.ExecuteReader("SELECT MIN(TIMESTAMP),MAX(TIMESTAMP) FROM LOG_HDATA" + (ID.HasValue ? " WHERE ID=" + ID.Value : "")))
+            using (var reader = DataHelper.Instance.ExecuteReader("SELECT MIN(TIMESTAMP),MAX(TIMESTAMP) FROM LOG" + (ID.HasValue ? " WHERE ID=" + ID.Value : "")))
             {
                 if (reader != null)
                 {
@@ -93,7 +93,7 @@ namespace DatabaseLib
             {
                 if (WriteToFile(date.AddDays(-1)) == 0)
                 {
-                    DataHelper.Instance.ExecuteNonQuery(string.Format("DELETE FROM LOG_HDATA WHERE [TIMESTAMP]<='{0}';", date.ToShortDateString()));
+                    DataHelper.Instance.ExecuteNonQuery(string.Format("DELETE FROM LOG WHERE [TIMESTAMP]<='{0}';", date.ToShortDateString()));
                 }
             }
         }
@@ -515,7 +515,7 @@ namespace DatabaseLib
         {
             StringBuilder sql = new StringBuilder("SELECT ");
             if (ID == null) sql.Append("ID,");
-            sql.Append(" [TIMESTAMP],[VALUE],M.DATATYPE FROM LOG_HDATA L INNER JOIN META_TAG M ON L.ID=M.TAGID WHERE");
+            sql.Append(" [TIMESTAMP],[VALUE],M.DATATYPE FROM LOG L INNER JOIN META_TAG M ON L.ID=M.TAGID WHERE");
             if (ID != null) sql.Append("  ID=").Append(ID.Value).Append(" AND ");
             sql.Append(" [TIMESTAMP] IN(");
             for (int i = 0; i < timeStamps.Length; i++)
