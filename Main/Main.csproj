@@ -115,6 +115,10 @@
       <Project>{4cef6f8c-594e-4dce-825e-a5809c55fb38}</Project>
       <Name>ControlLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Driver\Driver.csproj">
+      <Project>{f488b0b3-b851-4995-8c17-92f2a049da44}</Project>
+      <Name>Driver</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
