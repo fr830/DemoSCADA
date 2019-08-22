@@ -342,7 +342,7 @@
                     <cl:SliderRotation Height="400" Width="400"/>
                 </TabItem>
                 <TabItem Header="钻台机械手" >
-
+                    <cl:Gauge Height="400" Width="400"/>
                 </TabItem>
                 <TabItem Header="铁钻工">
 

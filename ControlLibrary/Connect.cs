@@ -62,15 +62,15 @@ namespace ControlLibrary
             }
         }
 
-        public int LocalPort { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string RemoteIPAddress { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public int RemotePort { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public bool IsClosed => throw new NotImplementedException();
-        public int RcvByteCnt { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public int SendByteCnt { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public int RcvByteSumCnt { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public int SendByteSumCnt { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public bool HaveHeartBeat { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int LocalPort { get{throw new NotImplementedException(); } set{throw new NotImplementedException(); } }
+        public string RemoteIPAddress { get {throw new NotImplementedException(); } set {throw new NotImplementedException(); } }
+        public int RemotePort { get {throw new NotImplementedException(); } set {throw new NotImplementedException(); } }
+        public bool IsClosed { get { throw new NotImplementedException(); } }
+        public int RcvByteCnt { get{throw new NotImplementedException(); } set {throw new NotImplementedException(); } }
+        public int SendByteCnt { get{throw new NotImplementedException(); } set {throw new NotImplementedException(); } }
+        public int RcvByteSumCnt { get {throw new NotImplementedException(); } set {throw new NotImplementedException(); } }
+        public int SendByteSumCnt { get {throw new NotImplementedException(); } set {throw new NotImplementedException(); } }
+        public bool HaveHeartBeat { get{throw new NotImplementedException(); } set {throw new NotImplementedException(); } }
 
         public event GetRcvBuffer GetRcvBufferEvent;
 

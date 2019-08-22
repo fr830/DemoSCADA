@@ -135,11 +135,11 @@ namespace DemoDriver
             }
         }
 
-        public ExpressionEval Eval => throw new NotImplementedException();
+        public ExpressionEval Eval  { get{throw new NotImplementedException(); }}
 
-        public IList<Scaling> ScalingList => throw new NotImplementedException();
+        public IList<Scaling> ScalingList { get{throw new NotImplementedException(); }}
 
-        public IEnumerable<IDriver> Drivers => throw new NotImplementedException();
+        public IEnumerable<IDriver> Drivers { get { throw new NotImplementedException(); } }
 
         object _syncRoot;
         public object SyncRoot
