@@ -7,8 +7,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
         <dxc:ChartControl>
             <dxc:RadarDiagram2D />
         </dxc:ChartControl>
+        <dxc:Chart3DControl  Grid.Row="1">
+            <dxc:Chart3DControl.Titles>
+                <dxc:Title Content="中文" />
+            </dxc:Chart3DControl.Titles>
+        </dxc:Chart3DControl>
     </Grid>
 </UserControl>

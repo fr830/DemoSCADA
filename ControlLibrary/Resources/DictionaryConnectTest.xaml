@@ -38,4 +38,6 @@
     <BitmapImage x:Key="openConnect" UriSource="../Images/OpenConnect.png"/>
     <BitmapImage x:Key="downArrow" UriSource="../Images/downArrow.png"/>
     <BitmapImage x:Key="upArrow" UriSource="../Images/upArrow.png"/>
+    <BitmapImage x:Key="leftSwitch" UriSource="../Images/leftSwitch.png"/>
+    <BitmapImage x:Key="rightSwitch" UriSource="../Images/rightSwitch.png"/>
 </ResourceDictionary>

@@ -26,7 +26,7 @@ namespace DemoDriver
 
 
         static string PATH = System.Environment.CurrentDirectory;
-        const string FILENAME = "server.xml";
+        const string FILENAME = "Command.xml";//用来做命定的字节保存，这样修改字节内容时，不需要改变程序
 
 
         //可配置参数，从XML文件读取
