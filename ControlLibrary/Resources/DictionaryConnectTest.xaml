@@ -34,10 +34,44 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
+    
+    <ControlTemplate TargetType="ToggleButton" x:Key="NormalSwitch">
+        <Border Background="AliceBlue" BorderThickness="2" BorderBrush="Black" CornerRadius="8,8,8,8" Width="150" Height="150">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="leftText" Grid.Column="0" TextAlignment="Left" Text="左边文字" FontSize="12" FontWeight="Bold" Margin="5,5,0,0"/>
+                    <TextBlock x:Name="rightText" Grid.Column="1" TextAlignment="Right" Text="右边文字" FontSize="12" FontWeight="Bold" Margin="0,5,5,0"/>
+                </Grid>
+                <Image Source="{DynamicResource leftSwitch}" Name="innerImage" Width="100" Grid.Row="1"/>
+                <TextBlock x:Name="downText" Grid.Row="2" TextAlignment="Center" Text="下方文字" FontSize="16" FontWeight="Bold"/>
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="CheckBox.IsChecked" Value="true">
+                <Setter TargetName="innerImage" Property="Source" Value="{DynamicResource leftSwitch}" />
+                <Setter TargetName="leftText" Property="Foreground" Value="#1E90FF"/>
+            </Trigger>
+            <Trigger Property="CheckBox.IsChecked" Value="false">
+                <Setter TargetName="innerImage" Property="Source" Value="{DynamicResource rightSwitch}" />
+                <Setter TargetName="rightText" Property="Foreground" Value="#1E90FF"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    
     <BitmapImage x:Key="closeConnect" UriSource="../Images/CloseConnect.png"/>
     <BitmapImage x:Key="openConnect" UriSource="../Images/OpenConnect.png"/>
     <BitmapImage x:Key="downArrow" UriSource="../Images/downArrow.png"/>
     <BitmapImage x:Key="upArrow" UriSource="../Images/upArrow.png"/>
     <BitmapImage x:Key="leftSwitch" UriSource="../Images/leftSwitch.png"/>
     <BitmapImage x:Key="rightSwitch" UriSource="../Images/rightSwitch.png"/>
+    
 </ResourceDictionary>

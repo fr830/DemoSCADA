@@ -14,7 +14,7 @@ namespace DemoDriver
     [Description("二层台机械手UDP协议")]
     public sealed class SecondFloorPLCDriver : IPLCDriver, IMultiReadWrite
     {
-        IConnect con = new UDPConnect(GetLocalIP(), 8080, DataHelper.RemoteIP, DataHelper.RemotePort,true);
+        IConnect con = new UDPConnect(GetLocalIP(), 8082, DataHelper.RemoteIP, DataHelper.RemotePort,true);
         int _rack;
         int _slot;
         string _IP;

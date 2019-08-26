@@ -57,7 +57,7 @@
             rangeControlRange1.Minimum = new System.DateTime(2019, 8, 22, 0, 0, 0, 0);
             rangeControlRange1.Owner = this.rangeControl1;
             this.rangeControl1.SelectedRange = rangeControlRange1;
-            this.rangeControl1.Size = new System.Drawing.Size(337, 216);
+            this.rangeControl1.Size = new System.Drawing.Size(351, 221);
             this.rangeControl1.TabIndex = 2;
             this.rangeControl1.Text = "rangeControl1";
             // 

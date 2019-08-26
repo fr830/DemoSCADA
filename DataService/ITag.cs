@@ -47,14 +47,57 @@ namespace DataService
             {
                 return _value;
             }
+        }
 
-            set
+        public float FloatTag
+        {
+            get
             {
-                _value = value;
-                if (PropertyChanged != null)
-                {
-                    this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs("Value"));
-                }
+                return _value.Single;
+            }
+        }
+
+        public bool BoolTag
+        {
+            get { return _value.Boolean; }
+        }
+
+        public byte ByteTag
+        {
+            get { return _value.Byte; }
+        }
+
+        public short ShortTag
+        {
+            get { return _value.Int16; }
+        }
+
+        public ushort UShortTag
+        {
+            get { return _value.Word; }
+        }
+
+        public int IntTag
+        {
+            get { return _value.Int32; }
+        }
+
+        public uint UIntTag
+        {
+            get { return _value.DWord; }
+        }
+
+        public string StringTag
+        {
+            get { return _value.ToString(); }
+        }
+
+        protected void OnPropertyChanged(string info)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(info));
             }
         }
 
@@ -108,6 +151,7 @@ namespace DataService
             if (quality == QUALITIES.QUALITY_GOOD)
             {
                 _value = newvalue;
+                OnPropertyChanged(this.GetType().Name);
                 if (ValueChanged != null)
                 {
                     ValueChanged(this, new ValueChangedEventArgs(_value));

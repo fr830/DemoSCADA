@@ -349,7 +349,6 @@
                     <driver:SecondFloor />
                 </TabItem>
                 <TabItem Header="猫道" >
-                    <cl:RotarySwitches Width="150" Height="150"/>
                 </TabItem>
                 <TabItem Header="记录查询" />
                 <TabItem Header="报表系统" />
