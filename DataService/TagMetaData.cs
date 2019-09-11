@@ -32,7 +32,9 @@ namespace DataService
 
         public string Name;
 
-        public TagMetaData(short id, short grpId, string name, string address,
+        public string Description;
+
+        public TagMetaData(short id, short grpId, string name, string address,string description,
             DataType type, ushort size, bool archive = false, float max = 0, float min = 0, int cycle = 0)
         {
             ID = id;
@@ -45,6 +47,7 @@ namespace DataService
             Maximum = max;
             Minimum = min;
             Cycle = cycle;
+            Description = description;
         }
 
         public int CompareTo(TagMetaData other)

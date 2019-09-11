@@ -11,16 +11,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using DevExpress.Charts;
 
 namespace ControlLibrary
 {
     /// <summary>
-    /// Gauge.xaml 的交互逻辑
+    /// HalfCircleGauge.xaml 的交互逻辑
     /// </summary>
-    public partial class Gauge : UserControl
+    public partial class HalfCircleGauge : UserControl
     {
-        public Gauge()
+        public HalfCircleGauge()
         {
             InitializeComponent();
         }

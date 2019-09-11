@@ -29,7 +29,7 @@ namespace DataService
                 if (index < 0) return false;
                 var meta = server.MetaDataList[index];
                 if (meta.Name == name) return true;
-                server.MetaDataList[index] = new TagMetaData(meta.ID, meta.GroupID, name, meta.Address, meta.DataType, meta.Size, meta.Archive, meta.Maximum, meta.Minimum, meta.Cycle);
+                server.MetaDataList[index] = new TagMetaData(meta.ID, meta.GroupID, name, meta.Address,meta.Description, meta.DataType, meta.Size, meta.Archive, meta.Maximum, meta.Minimum, meta.Cycle);
                 server.RemoveItemIndex(meta.Name);
                 server.AddItemIndex(name, tag);
                 return true;

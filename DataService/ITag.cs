@@ -28,6 +28,13 @@ namespace DataService
             }
         }
 
+        protected string _decription;
+        public string Description
+        {
+            get { return _decription; }
+            set { _decription = value; }
+        }
+
         protected QUALITIES _quality;
         public QUALITIES Quality
         {

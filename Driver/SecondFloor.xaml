@@ -5,37 +5,279 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DemoDriver"
              xmlns:cl="http://talonzeng.com/ControlLibrary"
-             xmlns:WinFormIntegration="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" FontSize="14" Background="AliceBlue" Margin="1" Name="secondFloor">
+             d:DesignHeight="800" d:DesignWidth="800" FontSize="14" Background="AliceBlue" Margin="1" Name="secondFloor">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/ControlLibrary;component/Resources/DictionaryConnectTest.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
-            <RowDefinition Height="200"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <cl:SliderRotation Grid.Row="1"/>
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <TextBox Text="topText" TextAlignment="Center" Grid.Column="0" Name="topText"/>
-            <TextBox Text="rightText" TextAlignment="Center" Grid.Column="2" Name="rightText"/>
-            <Button Grid.Column="1" Click="TestButton_Click" Name="testButton" Content="hello"/>
-        </Grid>
+            <Style TargetType="Button" x:Key="btnBlue">
+                <Setter Property="Background" Value="#fff"/>
+                <Setter Property="Foreground" Value="#000"/>
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="5" BorderThickness="1" Padding="5" BorderBrush="#000">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
+                                </ContentPresenter>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="Blue"/>
+                        <Setter Property="Foreground" Value="#fff"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
 
-        <CheckBox Grid.Row="2" Template="{StaticResource NormalSwitch}"/>
-        <!--<WinFormIntegration:WindowsFormsHost x:Name="winFormsHost" Grid.Row="2">
-            <cl:CircleGauge x:Name="cicleGauge"/>
-        </WinFormIntegration:WindowsFormsHost>-->
-    </Grid>
+            <Style TargetType="Button" x:Key="btnGreen">
+                <Setter Property="Background" Value="#fff"/>
+                <Setter Property="Foreground" Value="#000"/>
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="Padding" Value="5"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="5" BorderThickness="1" Padding="5" BorderBrush="#000">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                                </ContentPresenter>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="Green"/>
+                        <Setter Property="Foreground" Value="#fff"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style TargetType="Button" x:Key="btnLightRed">
+                <Setter Property="Background" Value="#fff"/>
+                <Setter Property="Foreground" Value="#000"/>
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Padding" Value="5"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="5" BorderThickness="1" Padding="5" BorderBrush="#000">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                                </ContentPresenter>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="LightCoral"/>
+                        <Setter Property="Foreground" Value="#fff"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style TargetType="Button" x:Key="btnGray">
+                <Setter Property="Background" Value="#fff"/>
+                <Setter Property="Foreground" Value="#000"/>
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="5" BorderThickness="1" Padding="5" BorderBrush="#000">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                                </ContentPresenter>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="DarkGray"/>
+                        <Setter Property="Foreground" Value="#fff"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+        </ResourceDictionary>
+
+
+    </UserControl.Resources>
+
+    <TabControl>
+        <TabControl.Resources>
+            <Style TargetType="{x:Type TabItem}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TabItem}">
+                            <Grid>
+                                <Border Name="Border" Margin="0,0,0,0" Background="Transparent" BorderBrush="Black" BorderThickness="1,1,1,1" CornerRadius="5">
+                                    <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center"  HorizontalAlignment="Center"  ContentSource="Header" Margin="12,2,12,2" RecognizesAccessKey="True">
+                                        <ContentPresenter.LayoutTransform>
+                                            <RotateTransform Angle="0" />
+                                        </ContentPresenter.LayoutTransform>
+                                    </ContentPresenter>
+                                </Border>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Panel.ZIndex" Value="100" />
+                                    <Setter TargetName="Border" Property="Background" Value="#5FBA7D" />
+                                    <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="Border" Property="Background" Value="DarkRed" />
+                                    <Setter TargetName="Border" Property="BorderBrush" Value="Black" />
+                                    <Setter Property="Foreground" Value="DarkGray" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </TabControl.Resources>
+        <TabItem Header="工作界面">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="300"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Vertical" Grid.Column="0">
+                        <Border   Height="50"/>
+                        <cl:SwitchButton  ContentLeft="手动" ContentDown="操作模式" ContentRight="自动" Template="{StaticResource SwitchButtonTemplate}" Margin="5"/>
+                        <cl:SwitchButton  ContentLeft="送杆" ContentDown="工作模式" ContentRight="排杆" Template="{StaticResource SwitchButtonTemplate}" Margin="5"/>
+                    </StackPanel>
+
+                    <cl:Animation Grid.Column="1"/>
+
+                    <StackPanel Orientation="Vertical" Grid.Column="2">
+                        <Border   Height="50"/>
+                        <cl:SwitchButton  ContentLeft="类型1" ContentDown="管柱类型" ContentRight="类型2" Template="{StaticResource SwitchButtonTemplate}" Margin="5"/>
+                        <cl:SwitchButton  ContentLeft="缩回" ContentDown="挡绳控制" ContentRight="伸出" Template="{StaticResource SwitchButtonTemplate}" Margin="5"/>
+                    </StackPanel>
+
+
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Border BorderBrush="Black" BorderThickness="2" CornerRadius="5">
+                        <StackPanel VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="排管 |" FontSize="18" FontFamily="华文楷体" FontWeight="Bold" VerticalAlignment="Center"/>
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="排管启动 "/>
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="井口定位 " />
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="井口抓杆 " />
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="机械手在井口 "  />
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="吊卡确认 "  />
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="指梁定位 "  />
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="指梁锁确认 "  />
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="指梁排管 "  />
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="排管结束 "  />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="送管 |" FontSize="18" FontFamily="华文楷体" FontWeight="Bold" VerticalAlignment="Center"/>
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="送杆启动 "/>
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="指梁定位 "/>
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="指梁抓杆 " />
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="指梁锁确认 "/>
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="井口定位 " />
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="井口送杆 "/>
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="吊卡确认 "/>
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="机械手在井口 " />
+                                <cl:MultiLineTwo Template="{StaticResource messegeButtonOne}" Margin="3" Content="送管结束 "/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <cl:CircleGauge Grid.Column="0" CurValue="{Binding ElementName=trackBar,Path=Value,Mode=TwoWay,NotifyOnSourceUpdated=True}"/>
+                    <cl:HalfCircleGauge Grid.Column="1"/>
+                    <cl:ElectricDashboard  Grid.Column="2"/>
+                </Grid>
+            </Grid>
+        </TabItem>
+        <TabItem Header="调试界面" >
+        </TabItem>
+        <TabItem Header="位置标定">
+        </TabItem>
+        <TabItem Header="控件集合" Name="controlCollect">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <cl:Clock Grid.Column="0" HorizontalAlignment="Left"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <cl:SymbolMapping LampType="3" StrContent="吊卡"/>
+                        <cl:SymbolMapping LampType="0" StrContent="吊卡"/>
+                        <cl:SymbolMapping LampType="1" StrContent="吊卡"/>
+                        <cl:SymbolMapping LampType="2" StrContent="吊卡"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Column="2">
+                        <cl:MultiLineThree Content="机械手" ContentDown="13" ContentUp="F1" Template="{StaticResource messegeButtonThree}" Margin="3" Width="150"/>
+                        <cl:MultiLineThree Content="机械手" ContentDown="13" ContentUp="F1" Template="{StaticResource messegeButtonThree}" Margin="3"/>
+                        <cl:MultiLineTwo Template="{StaticResource messegeButtonTwo}" Margin="3" Content="机械手" ContentEx="F2"/>
+                        <cl:MultiLineTwo Template="{StaticResource messegeButtonTwo}" Margin="3" Width="150" Content="机械手" ContentEx="F2"/>
+                    </StackPanel>
+                </Grid>
+                <cl:TrackBar MaxValue="200" MiniValue="0" Value="100" Grid.Row="2" Name="trackBar1"/>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Column="0">
+                        <cl:TrafficLights  Index="1" Width="60" Margin="5"/>
+                        <cl:SwitchButton  ContentLeft="手动" ContentDown="操作模式" ContentRight="自动" Template="{StaticResource SwitchButtonTemplate}" Margin="5"/>
+                        <cl:HalfCircleGauge/>
+                    </StackPanel>
+
+                    <cl:SliderRotation Grid.Column="2" Height="300" Width="300" HorizontalAlignment="Center"/>
+
+                    <cl:LinearModels   Grid.Column="1"/>
+                </Grid>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Column="0">
+                        <cl:CircleGauge CurValue="{Binding ElementName=trackBar,Path=Value,Mode=TwoWay,NotifyOnSourceUpdated=True}"/>
+                        <cl:VerticalLinear CurValue="50"/>
+                    </StackPanel>
+                    <cl:ElectricDashboard Grid.Column="1"/>
+                    <cl:LinearIndicator Grid.Column="2" Height="400"/>
+                </Grid>
+            </Grid>
+        </TabItem>
+    </TabControl>
 </UserControl>

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -13,28 +12,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Main
+namespace ControlLibrary
 {
     /// <summary>
-    /// MainWindow.xaml 的交互逻辑
+    /// LinearIndicator.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class LinearIndicator : UserControl
     {
-        public MainWindow()
+        public LinearIndicator()
         {
             InitializeComponent();
-           
-        }
-
-        private void Exit_Click(object sender, RoutedEventArgs e)
-        {
-            UpdateUI();
-            Application.Current.Shutdown();
-        }
-
-        public void UpdateUI()
-        {
-            this.topScrollText.Content = "如果";
         }
     }
 }

@@ -7,7 +7,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/DictionaryButton.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/ControlLibrary;component/Resources/DictionaryConnectTest.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

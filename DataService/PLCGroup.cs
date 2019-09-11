@@ -201,6 +201,7 @@ namespace DataService
                         if (dataItem != null)
                         {
                             //dataItem.Active = meta.Active;
+                            dataItem.Description = meta.Description;
                             _items.Add(dataItem);
                             _server.AddItemIndex(meta.Name, dataItem);
                         }

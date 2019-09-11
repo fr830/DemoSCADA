@@ -34,25 +34,110 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    
-    <ControlTemplate TargetType="ToggleButton" x:Key="NormalSwitch">
-        <Border Background="AliceBlue" BorderThickness="2" BorderBrush="Black" CornerRadius="8,8,8,8" Width="150" Height="150">
+
+
+    <ControlTemplate x:Key="messegeButtonThree" TargetType="{x:Type Button}">
+        <Grid>
+            <Border Background="Black"  CornerRadius="10,10,6,10">
+            </Border>
+            <Border Background="LightGray" Margin="0,0,5,5" CornerRadius="10,10,6,10" Name="upBorder">
+            </Border>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
+                    <RowDefinition  Height="2*"/>
+                    <RowDefinition  Height="4*"/>
+                    <RowDefinition  Height="2*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Margin="3,3,0,0" Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=ContentUp}" FontWeight="Bold" FontSize="10"/>
+                <TextBlock Margin="3" Grid.Row="1" Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content}"  TextWrapping="Wrap" FontFamily="华文楷体" FontWeight="Bold" FontSize="20"/>
+                <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=ContentDown}" FontWeight="Bold" FontSize="10" Grid.Row="2" TextAlignment="Right" Margin="0,0,10,5"/>
+            </Grid>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="ButtonBase.IsFocused" Value="True">
+                <Setter TargetName="upBorder"  Property="Background" Value="#62B45D"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="messegeButtonTwo" TargetType="{x:Type Button}">
+        <Grid>
+            <Border Background="Black"  CornerRadius="10,10,6,10">
+            </Border>
+            <Border Background="LightGray" Margin="0,0,5,5" CornerRadius="10,10,6,10" Name="upBorder">
+            </Border>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition  Height="3*"/>
+                    <RowDefinition  Height="5*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Margin="3,3,0,0" Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=ContentEx}" FontWeight="Bold" FontSize="10"/>
+                <TextBlock Margin="3" Grid.Row="1" Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content}" TextWrapping="Wrap" FontFamily="华文楷体" FontWeight="Bold" FontSize="20"/>
+            </Grid>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="ButtonBase.IsFocused" Value="True">
+                <Setter TargetName="upBorder"  Property="Background" Value="#62B45D"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="messegeButtonOne" TargetType="{x:Type Button}">
+        <Grid>
+            <Border Background="Black"  CornerRadius="10,10,6,10">
+            </Border>
+            <Border Background="LightGray" Margin="0,0,5,5" CornerRadius="10,10,6,10" Name="upBorder">
+            </Border>
+            <TextBlock Margin="3" Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content}" TextWrapping="Wrap" FontFamily="华文楷体" FontWeight="Bold" FontSize="20"/>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="ButtonBase.IsFocused" Value="True">
+                <Setter TargetName="upBorder"  Property="Background" Value="#62B45D"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="messegeShow" TargetType="{x:Type Button}">
+        <Grid  Width="130" Height="100">
+            <Border x:Name="brdElement">
+                <Border.Background>
+                    <SolidColorBrush Color="LightGray"></SolidColorBrush>
+                </Border.Background>
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10" Color="Black" Direction="235" Opacity=".5" RenderingBias="Quality" ShadowDepth="10" />
+                </Border.Effect>
+            </Border>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="1.5*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=ContentUp}" FontSize="24" TextAlignment="Center" FontWeight="Bold" FontFamily="华文楷体"/>
+                <TextBlock Grid.Row="1" Background="Black" Foreground="#20C01F" Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content}" FontSize="26" TextAlignment="Center" FontWeight="Bold"/>
+                <TextBlock Grid.Row="2" Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=ContentDown}" FontSize="24" TextAlignment="Right" FontWeight="Bold"/>
+            </Grid>
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate TargetType="CheckBox" x:Key="SwitchButtonTemplate">
+        <Border Background="AliceBlue" BorderThickness="2" BorderBrush="Black" CornerRadius="8,8,8,8" Width="110" Height="110">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1.5*"/>
                     <RowDefinition Height="5*"/>
-                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock x:Name="leftText" Grid.Column="0" TextAlignment="Left" Text="左边文字" FontSize="12" FontWeight="Bold" Margin="5,5,0,0"/>
-                    <TextBlock x:Name="rightText" Grid.Column="1" TextAlignment="Right" Text="右边文字" FontSize="12" FontWeight="Bold" Margin="0,5,5,0"/>
+                    <TextBlock x:Name="leftText" Grid.Column="0" TextAlignment="Left" Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=ContentLeft}" FontSize="12" FontWeight="Bold" Margin="2,2,0,0" FontFamily="华文楷体"/>
+                    <TextBlock x:Name="rightText" Grid.Column="1" TextAlignment="Right" Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=ContentRight}"  FontSize="14" FontWeight="Bold" Margin="0,2,2,0" FontFamily="华文楷体"/>
                 </Grid>
-                <Image Source="{DynamicResource leftSwitch}" Name="innerImage" Width="100" Grid.Row="1"/>
-                <TextBlock x:Name="downText" Grid.Row="2" TextAlignment="Center" Text="下方文字" FontSize="16" FontWeight="Bold"/>
+                <Image Source="{DynamicResource leftSwitch}" Name="innerImage" Width="70" Grid.Row="1"/>
+                <TextBlock x:Name="downText" Grid.Row="2" TextAlignment="Center" Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=ContentDown}" FontSize="18" FontWeight="Bold" FontFamily="华文楷体" Margin="0,0,0,3"/>
             </Grid>
         </Border>
         <ControlTemplate.Triggers>
@@ -66,12 +151,21 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    
+
+    <LinearGradientBrush x:Key="Flat3DBorderBrush"
+                         StartPoint="0.499,0" EndPoint="0.501,1">
+        <GradientStop Color="#FFF" Offset="0" />
+        <GradientStop Color="#DDD" Offset="0.01" />
+        <GradientStop Color="#AAA" Offset="0.99" />
+        <GradientStop Color="#888" Offset="1" />
+    </LinearGradientBrush>
+
     <BitmapImage x:Key="closeConnect" UriSource="../Images/CloseConnect.png"/>
     <BitmapImage x:Key="openConnect" UriSource="../Images/OpenConnect.png"/>
     <BitmapImage x:Key="downArrow" UriSource="../Images/downArrow.png"/>
     <BitmapImage x:Key="upArrow" UriSource="../Images/upArrow.png"/>
     <BitmapImage x:Key="leftSwitch" UriSource="../Images/leftSwitch.png"/>
     <BitmapImage x:Key="rightSwitch" UriSource="../Images/rightSwitch.png"/>
+    <BitmapImage x:Key="robotArm" UriSource="../Images/Zhs_2.bmp"/>
     
 </ResourceDictionary>

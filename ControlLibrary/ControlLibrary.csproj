@@ -82,20 +82,36 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CircleGauge.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="Animation.xaml.cs">
+      <DependentUpon>Animation.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CircleGauge.Designer.cs">
-      <DependentUpon>CircleGauge.cs</DependentUpon>
+    <Compile Include="AnimationButton.cs" />
+    <Compile Include="CircleGauge.xaml.cs">
+      <DependentUpon>CircleGauge.xaml</DependentUpon>
     </Compile>
     <Compile Include="CLConnectTest.xaml.cs">
       <DependentUpon>CLConnectTest.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Clock.xaml.cs">
+      <DependentUpon>Clock.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Connect.cs" />
     <Compile Include="DataForm.cs" />
-    <Compile Include="Gauge.xaml.cs">
-      <DependentUpon>Gauge.xaml</DependentUpon>
+    <Compile Include="ElectricDashboard.xaml.cs">
+      <DependentUpon>ElectricDashboard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HalfCircleGauge.xaml.cs">
+      <DependentUpon>HalfCircleGauge.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LinearIndicator.xaml.cs">
+      <DependentUpon>LinearIndicator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LinearModels.xaml.cs">
+      <DependentUpon>LinearModels.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MessageShow.cs" />
+    <Compile Include="MultiLineButton.cs" />
+    <Compile Include="SwitchButton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -109,12 +125,22 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="ScrollingTextControl.cs" />
     <Compile Include="SliderRotation.xaml.cs">
       <DependentUpon>SliderRotation.xaml</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="CircleGauge.resx">
-      <DependentUpon>CircleGauge.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="SymbolMapping.xaml.cs">
+      <DependentUpon>SymbolMapping.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TrackBar.xaml.cs">
+      <DependentUpon>TrackBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TrafficLights.xaml.cs">
+      <DependentUpon>TrafficLights.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VerticalLinear.xaml.cs">
+      <DependentUpon>VerticalLinear.xaml</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -127,11 +153,35 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Animation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CircleGauge.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CLConnectTest.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Gauge.xaml">
+    <Page Include="Clock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ElectricDashboard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HalfCircleGauge.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LinearIndicator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LinearModels.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -139,7 +189,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\DictionaryControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SliderRotation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SymbolMapping.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TrackBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TrafficLights.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VerticalLinear.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -165,6 +235,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\rightSwitch.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Zhs_2.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

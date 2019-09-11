@@ -1,0 +1,639 @@
+﻿<UserControl x:Class="ControlLibrary.Animation"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ControlLibrary"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="1000" Name="uc">
+    <UserControl.Resources>
+        <ControlTemplate TargetType="local:AnimationButton" x:Key="CircleColumn">
+            <Grid>
+                <Ellipse Stroke="Black"
+                         StrokeThickness="2">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Offset="0"
+                                          Color="Lime" />
+                            <GradientStop Offset="1"
+                                          Color="Lime" />
+                            <GradientStop Offset="1"
+                                          Color="Gold" />
+                            <RadialGradientBrush.Transform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleY="0.65" />
+                                </TransformGroup>
+                            </RadialGradientBrush.Transform>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <ContentPresenter HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+            </Grid>
+        </ControlTemplate>
+
+        <Style x:Key="txtStatic" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style x:Key="txtDynamic" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#1F45A0"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+        </Style>
+
+        <Style x:Key="borderStyle" TargetType="{x:Type Border}">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+        </Style>
+
+        <Style x:Key="MyFocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Control}">
+                        <Grid Margin="8">
+                            <Ellipse
+                    Name="r1"
+                    Stroke="Black"
+                    StrokeDashArray="2 2"
+                    StrokeThickness="1"/>
+                            <Border
+                    Name="border"
+                    Width="{TemplateBinding ActualWidth}"
+                    Height="{TemplateBinding ActualHeight}"
+                    BorderThickness="1"
+                    CornerRadius="2"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CircleButton" TargetType="local:AnimationButton">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource MyFocusVisual}"/>
+            <Setter Property="Background" Value="#FF6DB4EF"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="local:AnimationButton">
+                        <Grid>
+                            <Ellipse Fill="{TemplateBinding Background}"/>
+                            <Ellipse>
+                                <Ellipse.Fill>
+                                    <RadialGradientBrush>
+                                        <GradientStop Offset="0" Color="#00000000"/>
+                                        <GradientStop Offset="0.88" Color="#00000000"/>
+                                        <GradientStop Offset="1" Color="#80000000"/>
+                                    </RadialGradientBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <Ellipse Margin="5" x:Name="highlightCircle" >
+                                <Ellipse.Fill >
+                                    <LinearGradientBrush >
+                                        <GradientStop Offset="0" Color="#50FFFFFF"/>
+                                        <GradientStop Offset="0.5" Color="#00FFFFFF"/>
+                                        <GradientStop Offset="1" Color="#50FFFFFF"/>
+                                    </LinearGradientBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <ContentPresenter x:Name="content" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="highlightCircle" Property="Fill">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0.3,0" EndPoint="0.7,1">
+                                            <GradientStop Offset="0" Color="#50FFFFFF"/>
+                                            <GradientStop Offset="0.5" Color="#00FFFFFF"/>
+                                            <GradientStop Offset="1" Color="#50FFFFFF"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="content" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <TranslateTransform Y="0.5" X="0.5"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+    <Grid >
+        <Border BorderThickness="2" CornerRadius="10" Margin="3" BorderBrush="Black" Padding="5" Width="910" Height="430" Name="container">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <Border  BorderThickness="2,2,0,2" BorderBrush="Black">
+                        <StackPanel Orientation="Horizontal">
+                            <Border  Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[20] ,ElementName=uc}"/>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" Style="{StaticResource txtStatic}" HorizontalAlignment="Center">20</TextBlock>
+                            </Border>
+                            <local:AnimationButton x:Name="index20_10Z" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index20_9Z" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index20_8Z" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index20_7Z" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index20_6Z"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index20_5Z"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index20_4Z" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index20_3Z" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index20_2Z" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index20_1Z" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                        </StackPanel>
+                    </Border>
+                    <Border Width="30"/>
+                    <Border Width="30" BorderThickness="2,0,2,0" BorderBrush="Black"/>
+                    <Border Width="30"/>
+                    <Border  BorderThickness="0,2,2,2" BorderBrush="Black">
+                        <StackPanel Orientation="Horizontal">
+                            <local:AnimationButton Width="30"  x:Name="index19_1T" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index19_2T" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index19_3T" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index19_4T" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index19_5T" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index19_6T" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index19_7T" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index19_8T" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index19_9T" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index19_10T" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <Border  Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtStatic}">19</TextBlock>
+                            </Border>
+                            <Border  Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[19],ElementName=uc}"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+
+                <StackPanel Orientation="Horizontal">
+                    <Border  BorderThickness="2,2,0,2" BorderBrush="Black" >
+                        <StackPanel Orientation="Horizontal">
+                            <Border  Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}"  Text="{Binding Path=[10] ,ElementName=uc}"/>
+                            </Border>
+                            <Border  Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtStatic}">10</TextBlock>
+                            </Border>
+                            <local:AnimationButton x:Name="index10_10L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index10_9L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index10_8L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index10_7L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index10_6L"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index10_5L"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index10_4L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index10_3L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index10_2L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index10_1L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                        </StackPanel>
+                    </Border>
+                    <Border Width="30"/>
+                    <Border Width="30" BorderThickness="2,0,2,0" BorderBrush="Black"/>
+                    <Border Width="30"/>
+                    <Border  BorderThickness="0,2,2,2" BorderBrush="Black">
+                        <StackPanel Orientation="Horizontal">
+                            <local:AnimationButton Width="30"  x:Name="index1_1R" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index1_2R" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index1_3R" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index1_4R" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index1_5R" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index1_6R" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index1_7R" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index1_8R" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index1_9R" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <local:AnimationButton Width="30"  x:Name="index1_10R" Height="30" Style="{StaticResource CircleButton}" Margin="2"  Background="#FF499E1E"/>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtStatic}">1</TextBlock>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[1],ElementName=uc}"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+
+                <StackPanel Orientation="Horizontal">
+                    <Border  BorderThickness="2,2,0,2" BorderBrush="Black" >
+                        <StackPanel Orientation="Horizontal">
+                            <Border  Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[11],ElementName=uc}"/>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" Style="{StaticResource txtStatic}" HorizontalAlignment="Center">11</TextBlock>
+                            </Border>
+                            <local:AnimationButton x:Name="index11_10L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index11_9L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index11_8L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index11_7L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index11_6L"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index11_5L"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index11_4L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index11_3L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index11_2L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index11_1L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                        </StackPanel>
+                    </Border>
+                    <Border Width="30"/>
+                    <Border Width="30" BorderThickness="2,0,2,0" BorderBrush="Black"/>
+                    <Border Width="30"/>
+                    <Border  BorderThickness="0,2,2,2" BorderBrush="Black">
+                        <StackPanel Orientation="Horizontal">
+                            <local:AnimationButton Width="30" x:Name="index2_1R" Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index2_2R" Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index2_3R" Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index2_4R" Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index2_5R" Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index2_6R" Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index2_7R" Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index2_8R" Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index2_9R" Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index2_10R" Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtStatic}">2</TextBlock>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[2],ElementName=uc}"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+
+                <StackPanel Orientation="Horizontal">
+                    <Border  BorderThickness="2,2,0,2" BorderBrush="Black" >
+                        <StackPanel Orientation="Horizontal">
+                            <Border  Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[12],ElementName=uc}"/>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" Style="{StaticResource txtStatic}" HorizontalAlignment="Center">12</TextBlock>
+                            </Border>
+                            <local:AnimationButton x:Name="index12_10L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index12_9L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index12_8L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index12_7L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index12_6L"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index12_5L"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index12_4L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index12_3L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index12_2L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index12_1L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                        </StackPanel>
+                    </Border>
+                    <Border Width="30"/>
+                    <Border Width="30" BorderThickness="2,0,2,0" BorderBrush="Black"/>
+                    <Border Width="30"/>
+                    <Border  BorderThickness="0,2,2,2" BorderBrush="Black">
+                        <StackPanel Orientation="Horizontal">
+                            <local:AnimationButton Width="30" x:Name="index3_1R"  Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index3_2R"  Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index3_3R"  Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index3_4R"  Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index3_5R"  Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index3_6R"  Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index3_7R"  Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index3_8R"  Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index3_9R"  Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30" x:Name="index3_10R"  Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtStatic}">3</TextBlock>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[3],ElementName=uc}"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+
+                <StackPanel Orientation="Horizontal">
+                    <Border  BorderThickness="2,2,0,2" BorderBrush="Black" >
+                        <StackPanel Orientation="Horizontal">
+                            <Border  Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[13],ElementName=uc}" />
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" Style="{StaticResource txtStatic}" HorizontalAlignment="Center">13</TextBlock>
+                            </Border>
+                            <local:AnimationButton x:Name="index13_10L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index13_9L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index13_8L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index13_7L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index13_6L"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index13_5L"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index13_4L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index13_3L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index13_2L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index13_1L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                        </StackPanel>
+                    </Border>
+                    <Border Width="30"/>
+                    <Border Width="30" BorderThickness="2,0,2,0" BorderBrush="Black"/>
+                    <Border Width="30"/>
+                    <Border  BorderThickness="0,2,2,2" BorderBrush="Black">
+                        <StackPanel Orientation="Horizontal">
+                            <local:AnimationButton Width="30"  x:Name="index4_1R"  Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index4_2R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index4_3R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index4_4R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index4_5R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index4_6R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index4_7R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index4_8R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index4_9R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index4_10R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtStatic}">4</TextBlock>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[4],ElementName=uc}"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+
+                <StackPanel Orientation="Horizontal">
+                    <Border  BorderThickness="2,2,0,2" BorderBrush="Black" >
+                        <StackPanel Orientation="Horizontal">
+                            <Border  Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[14],ElementName=uc}"/>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" Style="{StaticResource txtStatic}" HorizontalAlignment="Center">14</TextBlock>
+                            </Border>
+                            <local:AnimationButton x:Name="index14_10L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index14_9L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index14_8L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index14_7L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index14_6L"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index14_5L"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index14_4L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index14_3L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index14_2L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index14_1L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                        </StackPanel>
+                    </Border>
+                    <Border Width="30"/>
+                    <Border Width="30" BorderThickness="2,0,2,0" BorderBrush="Black"/>
+                    <Border Width="30"/>
+                    <Border  BorderThickness="0,2,2,2" BorderBrush="Black">
+                        <StackPanel Orientation="Horizontal">
+                            <local:AnimationButton Width="30"  x:Name="index5_1R"  Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index5_2R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index5_3R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index5_4R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index5_5R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index5_6R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index5_7R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index5_8R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index5_9R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index5_10R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtStatic}">5</TextBlock>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[5],ElementName=uc}"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+
+                <StackPanel Orientation="Horizontal">
+                    <Border  BorderThickness="2,2,0,2" BorderBrush="Black" >
+                        <StackPanel Orientation="Horizontal">
+                            <Border  Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[15],ElementName=uc}"/>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" Style="{StaticResource txtStatic}" HorizontalAlignment="Center">15</TextBlock>
+                            </Border>
+                            <local:AnimationButton x:Name="index15_10L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index15_9L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index15_8L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index15_7L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index15_6L"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index15_5L"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index15_4L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index15_3L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index15_2L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index15_1L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                        </StackPanel>
+                    </Border>
+                    <Border Width="30"/>
+                    <Border Width="30" BorderThickness="2,0,2,0" BorderBrush="Black"/>
+                    <Border Width="30"/>
+                    <Border  BorderThickness="0,2,2,2" BorderBrush="Black">
+                        <StackPanel Orientation="Horizontal">
+                            <local:AnimationButton Width="30"  x:Name="index6_1R"  Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index6_2R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index6_3R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index6_4R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index6_5R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index6_6R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index6_7R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index6_8R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index6_9R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index6_10R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtStatic}">6</TextBlock>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[6],ElementName=uc}"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+
+                <StackPanel Orientation="Horizontal">
+                    <Border  BorderThickness="2,2,0,2" BorderBrush="Black" >
+                        <StackPanel Orientation="Horizontal">
+                            <Border  Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[16],ElementName=uc}"/>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" Style="{StaticResource txtStatic}" HorizontalAlignment="Center">16</TextBlock>
+                            </Border>
+                            <local:AnimationButton x:Name="index16_10L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index16_9L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index16_8L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index16_7L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index16_6L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index16_5L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index16_4L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index16_3L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index16_2L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index16_1L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                        </StackPanel>
+                    </Border>
+                    <Border Width="30"/>
+                    <Border Width="30" BorderThickness="2,0,2,0" BorderBrush="Black"/>
+                    <Border Width="30"/>
+                    <Border  BorderThickness="0,2,2,2" BorderBrush="Black">
+                        <StackPanel Orientation="Horizontal">
+                            <local:AnimationButton Width="30"  x:Name="index7_1R"  Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index7_2R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index7_3R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index7_4R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index7_5R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index7_6R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index7_7R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index7_8R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index7_9R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index7_10R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtStatic}">7</TextBlock>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[7],ElementName=uc}"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+
+                <StackPanel Orientation="Horizontal">
+                    <Border  BorderThickness="2,2,0,2" BorderBrush="Black" >
+                        <StackPanel Orientation="Horizontal">
+                            <Border  Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[17],ElementName=uc}"/>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" Style="{StaticResource txtStatic}" HorizontalAlignment="Center">17</TextBlock>
+                            </Border>
+                            <local:AnimationButton x:Name="index17_10L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index17_9L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index17_8L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index17_7L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index17_6L"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index17_5L"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index17_4L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index17_3L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index17_2L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index17_1L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                        </StackPanel>
+                    </Border>
+                    <Border Width="30"/>
+                    <Border Width="30" BorderThickness="2,0,2,0" BorderBrush="Black"/>
+                    <Border Width="30"/>
+                    <Border  BorderThickness="0,2,2,2" BorderBrush="Black">
+                        <StackPanel Orientation="Horizontal">
+                            <local:AnimationButton Width="30"  x:Name="index8_1R"  Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index8_2R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index8_3R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index8_4R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index8_5R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index8_6R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index8_7R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index8_8R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index8_9R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index8_10R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtStatic}">8</TextBlock>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[8],ElementName=uc}"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+
+
+                <StackPanel Orientation="Horizontal">
+                    <Border  BorderThickness="2,2,0,2" BorderBrush="Black" >
+                        <StackPanel Orientation="Horizontal">
+                            <Border  Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[18],ElementName=uc}"/>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" Style="{StaticResource txtStatic}" HorizontalAlignment="Center">18</TextBlock>
+                            </Border>
+                            <local:AnimationButton x:Name="index18_10L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index18_9L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2"/>
+                            <local:AnimationButton x:Name="index18_8L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index18_7L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index18_6L"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index18_5L"  Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index18_4L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index18_3L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index18_2L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                            <local:AnimationButton x:Name="index18_1L" Width="30" Height="30" Style="{StaticResource CircleButton}" Margin="2" />
+                        </StackPanel>
+                    </Border>
+                    <Border Width="30"/>
+                    <Border Width="30" BorderThickness="2,0,2,0" BorderBrush="Black"/>
+                    <Border Width="30"/>
+                    <Border  BorderThickness="0,2,2,2" BorderBrush="Black">
+                        <StackPanel Orientation="Horizontal">
+                            <local:AnimationButton Width="30"  x:Name="index9_1R"  Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index9_2R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index9_3R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index9_4R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index9_5R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index9_6R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index9_7R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index9_8R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index9_9R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <local:AnimationButton Width="30"  x:Name="index9_10R"   Height="30" Template="{StaticResource CircleColumn}" Margin="2"/>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtStatic}">9</TextBlock>
+                            </Border>
+                            <Border Style="{StaticResource borderStyle}">
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource txtDynamic}" Text="{Binding Path=[9],ElementName=uc}"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" Grid.Column="0">
+                            <TextBlock TextAlignment="Right" Style="{StaticResource txtDynamic}" Width="50"/>
+                            <TextBlock TextAlignment="Right" Style="{StaticResource txtDynamic}" Text="L" Width="50"/>
+                            <TextBlock TextAlignment="Right" Style="{StaticResource txtDynamic}" Text="{Binding Path=[L],ElementName=uc}" Width="50"/>
+                            <TextBlock TextAlignment="Right" Text="+"  Style="{StaticResource txtDynamic}" Width="50"/>
+                            <TextBlock TextAlignment="Right" Style="{StaticResource txtDynamic}" Text="{Binding Path=[Z],ElementName=uc}" Width="50"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Grid.Column="2">
+                            <TextBlock TextAlignment="Right" Style="{StaticResource txtDynamic}" Text="R" Width="50"/>
+                            <TextBlock TextAlignment="Right" Style="{StaticResource txtDynamic}" Text="{Binding Path=[R],ElementName=uc}" Width="50"/>
+                            <TextBlock TextAlignment="Right" Text="+"  Style="{StaticResource txtDynamic}" Width="50"/>
+                            <TextBlock TextAlignment="Right" Style="{StaticResource txtDynamic}" Text="{Binding Path=[T],ElementName=uc}" Width="50"/>
+                            <TextBlock TextAlignment="Right" Style="{StaticResource txtDynamic}" Width="50"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
+
+        <local:AnimationButton Width="30" Height="30" Style="{StaticResource CircleButton}" Click="btnTest" Background="Gray" x:Name="RobotCar">
+            <local:AnimationButton.RenderTransform>
+                <TranslateTransform x:Name="tt" X="0" Y="0"/>
+            </local:AnimationButton.RenderTransform>
+        </local:AnimationButton>
+
+        <Image  Source="{StaticResource robotArm}" Width="30"/>
+    </Grid>
+</UserControl>

@@ -317,7 +317,7 @@
         </Style>
     </Window.Resources>
     
-    <Grid Margin="5,5,5,0" >
+    <Grid Margin="5,0,5,0" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="70*"/>
             <ColumnDefinition Width="30*"/>
@@ -328,31 +328,45 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
-        <Border  Grid.Column="0" Grid.Row="0" BorderBrush="Gray"  BorderThickness="1" Grid.ColumnSpan="2">
-            <TextBlock Name="Info" Text="提示信息 和 故障信息" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Border  Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" Background="AliceBlue">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Image Source="./Images/sany.png" Width="100" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
+                    <cl:SymbolMapping Margin="0,0,7,0" LampType="1" StrContent="卡瓦"/>
+                    <cl:SymbolMapping Margin="0,0,7,0" LampType="0"/>
+                    <cl:SymbolMapping Margin="0,0,7,0" LampType="2" StrContent="顶驱"/>
+                </StackPanel>
+                <cl:ScrollingTextControl Grid.Column="1" Content="人机界面与二层台机械手通讯中断，检查供电与网络" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="18"  FontWeight="Bold"   Foreground="DarkRed" x:Name="topScrollText" VerticalAlignment="Stretch" FontFamily="华文楷体"/>
+            </Grid>
         </Border>
 
         <Border Grid.Column="0" Grid.Row="1" BorderBrush="Gray" BorderThickness="1">
             <TabControl Style="{DynamicResource AssetpdTabControlStyle}">
                 
-                <TabItem Header="通讯测试">
-                    <cl:CLConnectTest/>
-                </TabItem>
-
                 <TabItem Header="二层台机械手">
-                    <cl:SliderRotation Height="400" Width="400"/>
+                    <driver:SecondFloor />
                 </TabItem>
                 <TabItem Header="钻台机械手" >
-                    <cl:Gauge Height="500" Width="600"/>
+                    
                 </TabItem>
                 <TabItem Header="铁钻工">
-                    <driver:SecondFloor />
+                   
                 </TabItem>
                 <TabItem Header="猫道" >
                 </TabItem>
                 <TabItem Header="记录查询" />
                 <TabItem Header="报表系统" />
                 <TabItem Header="系统拓扑图" />
+                
+                <TabItem Header="通讯测试">
+                    <cl:CLConnectTest/>
+                </TabItem>
             </TabControl>
         </Border>
         
@@ -364,7 +378,29 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="固定的按钮和需要一直显示的变量信息" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+             
+                <WrapPanel>
+                    <cl:MultiLineTwo Template="{StaticResource messegeButtonTwo}" Margin="3" Content=" ESP  " ContentEx="F0"/>
+                    <cl:MultiLineThree Content="钻台面机械手 " ContentDown="13" ContentUp="F1" Template="{StaticResource messegeButtonThree}" Margin="3" Width="150"/>
+                    <cl:MultiLineThree Content="二层台机械手 " ContentDown="14" ContentUp="F2" Template="{StaticResource messegeButtonThree}" Margin="3"/>
+                    <cl:MultiLineThree Content="液压站 " ContentDown="15" ContentUp="F3" Template="{StaticResource messegeButtonThree}" Margin="3"/>
+                    <cl:MultiLineThree Content="铁钻工 " ContentDown="16" ContentUp="F4" Template="{StaticResource messegeButtonThree}" Margin="3"/>
+                    <cl:MultiLineThree Content="猫道 " ContentDown="17" ContentUp="F5" Template="{StaticResource messegeButtonThree}" Margin="3"/>
+                    <cl:MultiLineThree Content="  NEXT " ContentDown="18" ContentUp="F6" Template="{StaticResource messegeButtonThree}" Margin="3"/>
+               
+                    <cl:MultiLineTwo Template="{StaticResource messegeButtonTwo}" Margin="3" Content="指梁锁打开 " ContentEx="F7"/>
+                    <cl:MultiLineTwo Template="{StaticResource messegeButtonTwo}" Margin="3" Content="指梁锁关闭 " ContentEx="F8"/>
+                    <cl:MultiLineTwo Template="{StaticResource messegeButtonTwo}" Margin="3" Width="150" Content="           确认 " ContentEx="F2"/>
+                    <cl:MessageShow Template="{StaticResource messegeShow}" Content="00.0" ContentUp="大钩速度" ContentDown="m/s" Margin="6"/>
+                    <cl:MessageShow Template="{StaticResource messegeShow}" Content="30.0" ContentUp="大钩负荷" ContentDown="10kN" Margin="6"/>
+                    <cl:MessageShow Template="{StaticResource messegeShow}" Content="60.0" ContentUp="井深" ContentDown="m" Margin="6"/>
+                    <cl:MessageShow Template="{StaticResource messegeShow}" Content="0.00" ContentUp="立管压力" ContentDown="mPa" Margin="6"/>
+                    <cl:MessageShow Template="{StaticResource messegeShow}" Content="0.75" ContentUp="大钩高度" ContentDown="m" Margin="6"/>
+                    <cl:MessageShow Template="{StaticResource messegeShow}" Content="0.0" ContentUp="转盘扭矩" ContentDown="N.m" Margin="6"/>
+                    <cl:MessageShow Template="{StaticResource messegeShow}" Content="0.0" ContentUp="转盘转速" ContentDown="RPM" Margin="6"/>
+                <cl:MessageShow Template="{StaticResource messegeShow}" Content="0.0" ContentUp="大钩速度" ContentDown="m/s" Margin="6"/>
+                </WrapPanel>
+                
                 <Expander Grid.Row="1" >
                     <Expander.Header>
                         <WrapPanel>
@@ -411,7 +447,7 @@
             </StatusBarItem>
             <Separator Grid.Column="5" />
             <StatusBarItem Grid.Column="6">
-                <TextBlock Text="时间信息:" />
+                <TextBlock Text="累计作业时长:" />
             </StatusBarItem>
             <Separator Grid.Column="7" />
             <StatusBarItem Grid.Column="8" >

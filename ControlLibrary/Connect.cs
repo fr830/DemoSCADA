@@ -189,7 +189,7 @@ namespace ControlLibrary
             }
         }
 
-        private int _localPort = 8080;
+        private int _localPort = 8083;
         public int LocalPort
         {
             get { return _localPort; }
@@ -201,7 +201,7 @@ namespace ControlLibrary
                 }
                 else
                 {
-                    _localPort = 8080;
+                    _localPort = 8083;
                 }
             }
         }
@@ -223,7 +223,7 @@ namespace ControlLibrary
             }
         }
 
-        private int _remotePort = 8081;
+        private int _remotePort = 8084;
         public int RemotePort
         {
             get { return _remotePort; }
@@ -235,7 +235,7 @@ namespace ControlLibrary
                 }
                 else
                 {
-                    _remotePort = 8081;
+                    _remotePort = 8084;
                 }
             }
         }

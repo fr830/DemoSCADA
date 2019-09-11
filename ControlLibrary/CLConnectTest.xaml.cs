@@ -51,7 +51,7 @@ namespace ControlLibrary
         static CLConnectTest()
         {
             IsConnectedProperty = DependencyProperty.Register("IsConnected", typeof(bool), typeof(CLConnectTest), new PropertyMetadata((bool)false));
-            PortProperty = DependencyProperty.Register("Port", typeof(int), typeof(CLConnectTest), new PropertyMetadata((int)8080));
+            PortProperty = DependencyProperty.Register("Port", typeof(int), typeof(CLConnectTest), new PropertyMetadata((int)8083));
             SendCommand = new RoutedCommand();
         }
 
@@ -208,13 +208,13 @@ namespace ControlLibrary
                 {
                     ipList.Add(ip.ToString());
                     _localIPAddress = ip.ToString();
-                    remoteIPList.Add(ip.ToString() + " :8081");
+                    remoteIPList.Add(ip.ToString() + " :8084");
                 }
 
             }
 
             ipList.Add("127.0.0.1");
-            remoteIPList.Add("127.0.0.1 :8081");
+            remoteIPList.Add("127.0.0.1 :8084");
             cmbIpAddress.ItemsSource = ipList;
             cmbIpAddress.SelectedIndex = 0;
             cmbRemoteHost.ItemsSource = remoteIPList;

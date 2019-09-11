@@ -310,8 +310,9 @@ namespace DemoDriver
                 dataReader.NextResult();
                 while (dataReader.Read())
                 {
-                    var meta = new TagMetaData(dataReader.GetInt16(0), dataReader.GetInt16(1), dataReader.GetString(2), dataReader.GetString(3), (DataType)dataReader.GetByte(4),
+                    var meta = new TagMetaData(dataReader.GetInt16(0), dataReader.GetInt16(1), dataReader.GetString(2), dataReader.GetString(3),dataReader.GetString(10), (DataType)dataReader.GetByte(4),
                      (ushort)dataReader.GetInt16(5), dataReader.GetBoolean(6), dataReader.GetFloat(7), dataReader.GetFloat(8), dataReader.GetInt32(9));
+                    
                     _list.Add(meta);
                     if (meta.Archive)
                     {

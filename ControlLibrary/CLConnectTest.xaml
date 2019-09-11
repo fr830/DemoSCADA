@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ControlLibrary"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"  FontSize="14" Background="AliceBlue" Margin="1" Name="connetTest">
+             d:DesignHeight="450" d:DesignWidth="800"  FontSize="14" Background="AliceBlue" Margin="1">
     <UserControl.CommandBindings>
         <CommandBinding Command="{x:Static local:CLConnectTest.SendCommand}" Executed="Send_Execute" CanExecute="Send_CanExecute"/>
     </UserControl.CommandBindings>
